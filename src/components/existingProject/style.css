@@ -1,0 +1,38 @@
+#container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  #todos,
+  #completedTodos {
+    border: 2px solid #ccc;
+    padding: 10px;
+    width: 200px;
+  }
+  
+  #todos {
+    background-color: #ffd8a8;
+  }
+  
+  #completedTodos {
+    background-color: #c2f0c2;
+  }
+  
+  div {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #aaa;
+    cursor: grab;
+  }
+  
+  div:active {
+    cursor: grabbing;
+  }
+  #task{
+    height: 10px;
+    width: 10px;
+    background-color: aqua;
+  }
+  
+  
