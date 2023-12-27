@@ -2,17 +2,20 @@ import React, { useState } from 'react';
 //import { Tabs, Tab } from 'react-bootstrap';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { useNavigate } from 'react-router-dom';
 import FormNeaProject from './form';
 import UserAssociation from './userAssociation';
 
 
 export default function ManagmentNewProject() {
-
-
+const navigate=useNavigate();
+const handleClick=()=>{
+    navigate('/project/50')
+}
     const [key, setKey] = useState('createNewProject');
     return (
 
-
+<>
         <Tabs
             id="controlled-tab-example"
             activeKey={key}
@@ -29,7 +32,8 @@ export default function ManagmentNewProject() {
 כאן תבוא קומפוננטה של הוספת משימה חדשה
             </Tab>
         </Tabs>
-
+        <button onClick={handleClick}>end</button>
+</>
     )
 }
 

@@ -4,6 +4,7 @@ import { ProjectContext } from '../../context/projectCOntext';
 import SingleProject from './singleProject';
 import { Button } from 'react-bootstrap';
 import ManagmentNewProject from '../createNewProject/managmentNewProject';
+import NewProject from './newProject';
 
 
 
@@ -13,17 +14,7 @@ export default function ShowAllProjcts() {
 
     const { currentUser } = useContext(UserContext);
     const { projectsDetails } = useContext(ProjectContext);
-    console.log(projectsDetails);
 
-
-/*     const isUserAllowed = (project) => {
-        const isManager = project.adminRef === currentUser;
-        const isUserInProject = project.users.includes(currentUser);
-        return isManager || isUserInProject;
-    }; */
-    //const filteredProjects = (projectsDetails || []).filter((project) => isUserAllowed(project));
-
-   // console.log(filteredProjects);
 
     return (
         <div>
@@ -31,10 +22,7 @@ export default function ShowAllProjcts() {
             {projectsDetails.map((project) => (
                 <SingleProject key={project.id} project={project} />
             ))}
-{/*             כאן צריך להיות ניווט ליצירת פרוייקט חדש
- */}            <Button>
-               +
-            </Button>
+        <NewProject/>
 
         </div>
     )
