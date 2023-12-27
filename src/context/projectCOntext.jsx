@@ -50,7 +50,7 @@ export default function ProviderProjec({ children }) {
 
     }]
 
-    const shared = {  projectsDetails}
+    const shared = {projectsDetails}
 
     return (
         <ProjectContext.Provider value={shared}>
