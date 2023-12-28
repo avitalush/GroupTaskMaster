@@ -13,13 +13,29 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SwipeableTemporaryDrawer from './components/general/navSide'
 import { Main } from './components/general/mainSide'
 import Login from './components/users/login/logIn'
+import AddUser from './components/users/addUser'
+import { Home } from '@mui/icons-material'
 
 
 function App() {
 
   return (
-   <>
-   </>
+     <ProviderProjec>
+     <BrowserRouter>
+          <SwipeableTemporaryDrawer />
+
+   <Routes> 
+   <Route path='/home' element={<ShowAllProjcts/>}></Route>
+   <Route path='/login' element={<Login/>}></Route>
+
+      <Route path='/register' element={<Main><AddUser/></Main>}></Route>
+     <Route path='/project/:index' element={<Main><Kanban/></Main>}></Route>
+       <Route path='/newproject' element={<ManagmentNewProject/>}></Route>
+
+    </Routes>
+     </BrowserRouter> 
+
+   </ProviderProjec> 
     
   )
 }

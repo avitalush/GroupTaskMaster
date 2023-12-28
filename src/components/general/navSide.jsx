@@ -18,6 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -69,6 +70,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft() {
+  const navigate=useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -90,12 +92,17 @@ export default function PersistentDrawerLeft() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            sx={{ mr: 2,p:0, ...(open && { display: 'none' }) }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            <button onClick={() => { navigate("/register") }}>
+              הרשמה 
+            </button>
+            <button onClick={() => { navigate("/login") }}>
+              התחברות 
+            </button>
           </Typography>
         </Toolbar>
       </AppBar>
