@@ -33,6 +33,7 @@ const Login = () => {
     };
 
     const doApi = async (_data) => {
+        navigate("/home")
         try {
             const url = 'localhost/users/login';
             ///const { data } = await doApiMethodSignUpLogin(url, "POST", _data);
@@ -40,7 +41,7 @@ const data=0;
             if (data.token) {
                 console.log(data)
                 //localStorage.setItem(TOKEN_NAME, data.token);
-                navigate("/buildingHomePage")
+                navigate("/home")
             }
 
         }
@@ -59,7 +60,7 @@ const data=0;
     }
 
     return (
-        <div className='container center p-5'>
+        <div className='container center '>
             <form onSubmit={onSubmit} className="form mx-auto pt-5">
                 <h2 className='mb-4'>היי, טוב לראות אותך</h2>
                 <TextField id="standard-basic"
@@ -93,15 +94,15 @@ const data=0;
 
                 <div>
                     <Button variant="contained"
-                        style={{ background: "#94db9f" }}
+                        style={{ background: "red" }}
                         size="medium" type="submit"
                     >  התחבר  </Button>
 
                     <Divider className='w-30 text-dark my-3' />
-                    <p className="move" onClick={openReset}>שכחתי סיסמא</p>
+                    {/* <p className="move" onClick={openReset}>שכחתי סיסמא</p> */}
 
                     {open ? <ForgetPassword email={mail} setOpen={setOpen} /> : null}
-                    <p className="move"> לא רשום? עבור <span className="link" onClick={() => { navigate("/register"); }}> להרשמה </span></p>
+                    <p className="move link" onClick={() => { navigate("/register"); }} style={{cursor:"pointer"}}> לא רשום? עבור להרשמה </p>
                 </div>
             </form>
         </div>
