@@ -66,15 +66,20 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
  import { ChromePicker } from 'react-color';
 
-const FormNeaProject = ({ setName, setBuildId,setDescription,formData,setPermissiontoAssociateTasks }) => {
+const FormNeaProject = ({formData,setFormData }) => {
   const [text, setText] = useState(" ממליצים לך בחום להוסיף תיאור נרחב ");
+  const [options, setOptions] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
   const [count, setCount] = useState(0);
   const [color, setColor] = useState("grey");
-    const [colorPicker, setColorPicker] = useState('#ffffff'); // Initial color
+    const [colorPicker, setColorPicker] = useState(formData.color); // Initial color
     const [displayColorPicker, setDisplayColorPicker] = useState(false);
     const handleChangeColor = (newColor) => {
         setColorPicker(newColor.hex);
+        setFormData((prevState) => ({ ...prevState, color: newColor.hex}));
+        toggleColorPicker();
+
     };
     const handleChange = ({ target }) => {
       const cnt = target.value.length;
@@ -83,39 +88,61 @@ const FormNeaProject = ({ setName, setBuildId,setDescription,formData,setPermiss
           case cnt >= 1 && cnt < 30:
               setColor("red");
               setText("מרגיש לנו שהתיאור שכתבת קצר מידי");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
               break;
           case cnt >= 30 && cnt < 50:
               setColor("orange");
               setText("יופי, התיאור הולך לכיוון הנכון");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
 
               break;
           case cnt >= 50 && cnt < 100:
               setColor("yellow");
               setText("עוד ממש קצת וזה שם");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
 
               break;
           case cnt >= 100 && cnt < 120:
               setColor("light-green");
               setText("אוטוטו");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
 
               break;
           case cnt >= 150:
               setColor("green");
               setText("בול!");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
 
               break;
           default:
               setColor("grey");
               setText(" ממליצים לך בחום להוסיף תיאור נרחב ");
-              setDescription(cnt)
+              setFormData((prevState) => ({ ...prevState, description: cnt}));
               break;
       }
   }
+  const handleChangeValue=(event)=>{
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  }
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    if (inputValue.endsWith('-new')) {
+      const newOption = inputValue.slice(0, -4).trim();
+      setOptions((prevOptions) => [...prevOptions, newOption]);
+      setInputValue('');
+    }
+  };
+
+  const handleAddOption = () => {
+    setOptions((prevOptions) => [...prevOptions, inputValue]);
+    setInputValue('');
+    setFormData((prevState) => ({ ...prevState, categories: options }));
+
+  };
    const toggleColorPicker = () => {
     setDisplayColorPicker(!displayColorPicker);
   };
@@ -125,11 +152,14 @@ const FormNeaProject = ({ setName, setBuildId,setDescription,formData,setPermiss
             <div className='row gx-0 justify-content-around'>
                 <div className="col-md-6">
                     <label>שם הפרויקט</label> <br />
-                    <TextField id="standard-basic" variant="standard" onChange={({ target }) => setName(target.value)} />
+                    <TextField id="standard-basic" variant="standard"
+                     name="name"
+                                value={formData.name}
+                                onChange={handleChangeValue} 
+                                 />
                     <br /> <br />
-                    <label>תיאור הפרויקט</label> <br />
                     <div>
-                <h4>פרטים נוספים (עד 150 תווים) {count}/150</h4>
+                <h4>תיאור המשימה  (עד 150 תווים) {count}/150</h4>
                 <span>{text}</span>
                 <BorderLinearProgress
                     color1={color}
@@ -149,26 +179,44 @@ const FormNeaProject = ({ setName, setBuildId,setDescription,formData,setPermiss
             </div>
                     <br /> <br />
                     <FormControl>
-      <FormLabel id="demo-controlled-radio-buttons-group">סוג תשלום:</FormLabel>
+      <FormLabel id="demo-controlled-radio-buttons-group">סוג לקיחת משימות:</FormLabel>
       <RadioGroup
         row
         aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-        value={true}
-        onChange={({ target }) => setPermissiontoAssociateTasks(target.value)} 
-              >
+        name="permissiontoAssociateTasks"
+        value={formData.permissiontoAssociateTasks}
+        onChange={handleChangeValue} 
+        >
         <FormControlLabel value={true} control={<Radio />} label="בחירת משימות על ידי מנהל" />
         <FormControlLabel value={false} control={<Radio />} label="לקיחת משימות על ידי משתתפים" />
       </RadioGroup>
     </FormControl>
+    
+    <br /> <br />
     <div>
-      <button onClick={toggleColorPicker}>Toggle Color Picker</button>
+      <input
+        type="text"
+        list="cars"
+        value={inputValue}
+        onChange={handleInputChange}
+        onBlur={handleInputBlur}
+        placeholder="Type here..."
+      />
+      <datalist id="cars">
+        {options.map((o, index) => (
+          <option key={index}>{o}</option>
+        ))}
+      </datalist>
+      <button onClick={handleAddOption}>Add Option</button>
+    </div>
+    <div>
+    <button onClick={toggleColorPicker} style={{ color: formData.color }}>Toggle Color Picker - {formData.color}</button>
 
       {displayColorPicker && (
         <div>
-          <h2>Color Picker</h2>
-          <ChromePicker color={colorPicker}  onChange={({ target }) => setColorProject(target.value.hex),handleChangeColor(target.value)}  />
-          <p>Choose a color for your project: {colorPicker}</p>
+          
+          <ChromePicker color={formData.color} name="color" onChange={handleChangeColor}  />
+          <p>Choose a color for your project: {formData.color}</p>
         </div>
       )}
     </div>

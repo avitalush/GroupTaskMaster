@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useContext } from 'react'
 import { useNavigate, useParams } from "react-router";
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
@@ -14,38 +14,60 @@ import ForgetPassword from './forgetPassword';
 import swal from 'sweetalert';
 import "./login.css";
 import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { UserContext } from '../../../context/userContext';
+import { ProjectContext } from '../../../context/projectCOntext';
 
 
 const Login = () => {
-   
+    const { signIn } = useContext(UserContext);
+    const { setProjectsList } = useContext(ProjectContext);
+
     const navigate = useNavigate();
     const { type } = useParams();
     const [open, setOpen] = React.useState(false);
     const [mail, setMail] = React.useState("");
     const [showPassword, setshowPassword] = React.useState(false)
-
+const [formData,setFormData]=useState({
+    password:"",
+    email:""
+})
     const { register, handleSubmit, formState: { errors }, getValues } = useForm({
         
     });
 
-    const onSubmit = (data) => {
-        doApi(data)
+    const onSubmit = () => {
+        doApi()
     };
-
-    const doApi = async (_data) => {
-        navigate("/home")
-        try {
-            const url = 'localhost/users/login';
-            ///const { data } = await doApiMethodSignUpLogin(url, "POST", _data);
-const data=0;
-            if (data.token) {
-                console.log(data)
-                //localStorage.setItem(TOKEN_NAME, data.token);
-                navigate("/home")
+const apiLogIn=async(_url, _method, _body = {})=>{
+    try {
+        let resp = await axios({
+            method: _method,
+            url: _url,
+            data: JSON.stringify(_body),
+            headers: {
+                'Content-Type': 'application/json',
+                // "x-api-key":localStorage[TOKEN_NAME]
             }
+        })
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+    const doApi = async () => {
+        try {
+            
+            const { data } = await signIn("/login", "POST", formData);
+                console.log(data)
+                localStorage.setItem("token", data.token);
+                setProjectsList(data.allProjectsFromUser)
+                 navigate("/home")
+            
 
         }
         catch (err) {
+            console.log(err)
             console.log(err.response?.data?.msg);
             swal({
                 title: "כתובת המייל או הסיסמא שגויים!",
@@ -58,16 +80,20 @@ const data=0;
         setMail(getValues('email'))
         setOpen(true)
     }
-
+    const handleChangeValue=(event)=>{
+        const { name, value } = event.target;
+        setFormData((prevState) => ({ ...prevState, [name]: value }));
+      }
     return (
         <div className='container center '>
-            <form onSubmit={onSubmit} className="form mx-auto pt-5">
-                <h2 className='mb-4'>היי, טוב לראות אותך</h2>
+<form onSubmit={handleSubmit(onSubmit)} className="form mx-auto pt-5">
+                    <h2 className='mb-4'>היי, טוב לראות אותך</h2>
                 <TextField id="standard-basic"
                     label="אימייל"
                     name="email"
                     className='w-75'
                     variant="outlined" 
+                    onChange={handleChangeValue}
                     style={{ backgroundColor: "#ebedf0" }} />
 
                 <p className='text-danger'>{errors.email?.message}</p>
@@ -75,10 +101,11 @@ const data=0;
                 <FormControl sx={{ m: 1 }} variant="standard" className='w-75'>
                     <InputLabel htmlFor="outlined-adornment-password">סיסמא</InputLabel>
                     <OutlinedInput
-                        {...register("password")}
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
                         style={{ backgroundColor: "#ebedf0" }}
+                        name="password"
+                        onChange={handleChangeValue}
                         endAdornment={
                             <InputAdornment position="start">
                                 <IconButton
@@ -96,6 +123,7 @@ const data=0;
                     <Button variant="contained"
                         style={{ background: "red" }}
                         size="medium" type="submit"
+                        onClick={handleSubmit}
                     >  התחבר  </Button>
 
                     <Divider className='w-30 text-dark my-3' />

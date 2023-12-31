@@ -1,6 +1,6 @@
 
 import React, { useState, useContext } from 'react';
-import { UserContext } from '../../context/userConrext';
+import { UserContext } from '../../context/userContext';
 //import Card from 'react-bootstrap/Card';
 import { Button , Card} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
