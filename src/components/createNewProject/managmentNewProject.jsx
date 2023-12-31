@@ -1,43 +1,5 @@
-// import React, { useState } from 'react';
-// //import { Tabs, Tab } from 'react-bootstrap';
-// import Tab from 'react-bootstrap/Tab';
-// import Tabs from 'react-bootstrap/Tabs';
-// import { useNavigate } from 'react-router-dom';
-// import FormNeaProject from './form';
-// import UserAssociation from './userAssociation';
 
-
-// export default function ManagmentNewProject() {
-// const navigate=useNavigate();
-// const handleClick=()=>{
-//     navigate('/project/50')
-// }
-//     const [key, setKey] = useState('createNewProject');
-//     return (
-
-// <>
-//         <Tabs
-//             id="controlled-tab-example"
-//             activeKey={key}
-//             onSelect={(k) => setKey(k)}
-//             className="mb-3"
-//         >
-//             <Tab eventKey="createNewProject" title="Create New Project">
-//                 <FormNeaProject></FormNeaProject>
-//             </Tab>
-//             <Tab eventKey="addUsers" title="Add Users">
-//                 <UserAssociation></UserAssociation>
-//             </Tab>
-//             <Tab eventKey="addTasks" title="Add Tasks">
-// כאן תבוא קומפוננטה של הוספת משימה חדשה
-//             </Tab>
-//         </Tabs>
-//         <button onClick={handleClick}>end</button>
-// </>
-//     )
-// }
-
-import * as React from 'react';
+import React,{useContext} from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -51,25 +13,42 @@ import Swal from 'sweetalert2';
 import CreateCategory from './createCategory';
 import { Alert, AlertTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import UserAssociation from './userAssociation';
+import axios from 'axios';
+import CreateTasksList from './createTasksList';
+import { TaskContext } from '../../context/taskContext';
 
-const steps = ['אימות פרטים', 'הכנסת פרטים אישיים', 'סיום'];
+const steps = [' יצירת פרויקט חדש', 'הכנסת משימות  ', 'הוספת משויכים לפרויקט  ', 'סיום'];
 
 export default function ManagmentNewProject() {
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
+    const [idProject, setIdProject] = useState(0);
+    const { tasks ,addTasksListToProject} = useContext(TaskContext);
+
     const [skipped, setSkipped] = useState(new Set());
-    const [email, setEmail] = useState("");
-    const [buildId, setBuildId] = useState("");
-    const [building, setBuilding] = React.useState(null);
-    const [user, setUser] = useState(null);
+    const [formData,setFormData]=useState({
+        permissiontoAssociateTasks:false,
+        name:"",
+        description:"",
+        color:'#cc8686',
+        categories:[]
+    })
 
     const handleNext = () => {
+        console.log("hi");
         if (activeStep === steps.length - 1) {
             navigate("/login");
         }
         let newSkipped = skipped;
         if (activeStep == 0) {
-            identityUser();
+            createProject();
+        }
+        if (activeStep == 1) {
+            createTasks();
+        }
+        if (activeStep == 2) {
+            createUsers();
         }
         setSkipped(newSkipped);
     };
@@ -77,57 +56,57 @@ export default function ManagmentNewProject() {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
+const createTasks=()=>{
+    addTasksListToProject();
+    
+    //setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    const identityUser = async () => {
+}
+const createUsers=()=>{
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+}
+const apiProject=async(_url, _method, _body = {})=>{
+    console.log(_body);
+    try {
+        let resp = await axios({
+            method: _method,
+            url: _url,
+            data: JSON.stringify(_body),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+          
+        })
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+    const createProject = async () => {
+        console.log(formData);
         try {
-            const url = "localhost/users/identityUser/" + email + "/" + buildId;
-            // const { data } = await doApiMethod(url, "GET");
-            data={};
-            if (data.length == 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'אופס..',
-                    text: 'הפרטים שהזנת שגויים.',
-                    footer: '<a href="">למה יש לי בעיה?</a>'
-                })
-            } else {
-                setUser(data[0]);
-                setActiveStep((prevActiveStep) => prevActiveStep + 1);
-            }
-            console.log(data)
+            const url = "http://localhost:1200/api/v1/projects/createProject";
+             const { data } = await apiProject(url, "POST",formData);
+          
+            setIdProject(data.id);
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+           
+
         }
         catch (err) {
             console.log(err);
         }
+
     }
 
     const onSubmit = (data) => {
-        console.log(data,building)
-        if (building.paymentType==false) {
-            data.price = building.paymentFees * data.area;
-        } else {
-            data.price = building.paymentFees;
-        }
-        data.fullName = { "firstName": data.firstName, "lastName": data.lastName };
-        data.active = true;
-        data.numApartment = user.numApartment;
-        delete data.firstName;
-        delete data.lastName;
-        console.log(data);
-        editUser(data);
+       
     }
 
     const editUser = async (obj) => {
-        try {
-            const url = API_URL + "/users/" + user._id
-            const { data } = await doApiMethod(url, "PUT", obj);
-            console.log(data);
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
-        }
-        catch (err) {
-            console.log(err);
-        }
+       
     }
 
     const handleReset = () => {
@@ -137,17 +116,19 @@ export default function ManagmentNewProject() {
     const getStepContent = () => {
         switch (activeStep) {
             case 0:
-                return <FormNeaProject setBuildId={setBuildId} setEmail={setEmail} />;
+                return <FormNeaProject formData={formData} setFormData={setFormData} />;
             case 1:
-                return <CreateCategory user={user} buildId={buildId} onSubmit={onSubmit} building={building} setBuilding={setBuilding} />;
+                return <CreateTasksList idProject={idProject}  tasks={tasks}/>;
+                case 2:
+                    return <UserAssociation />;
             default:
                 return;
         }
     }
 
     return (<React.Fragment>
-        <Box sx={{ width: '70%', padding: "24px", margin: "auto", backgroundColor: "white", marginTop: "24px" }}>
-            <h3 className="text-center mb-5">רישום דייר</h3>
+        <Box sx={{ width: '70%', padding: "24px", margin: "auto", backgroundColor: "white", marginTop: "24px",direction:"rtl" }}>
+            <h3 className="text-center mb-5">יצירת פרויקט</h3>
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps = {};
@@ -165,9 +146,10 @@ export default function ManagmentNewProject() {
                 <React.Fragment>
                     <Typography sx={{ mt: 2, mb: 1, p:"24px" }}>
                         <Alert severity="success" style={{ fontSize: "x-large" }}>
-                            <AlertTitle style={{ fontSize: "large" }}>  הרשמתך בוצעה <strong>בהצלחה.</strong> </AlertTitle>                           
+                            <AlertTitle style={{ fontSize: "large" }}>  הפרויקט נוצר <strong>בהצלחה.</strong> </AlertTitle>                           
                         </Alert>
                     </Typography>
+                    <button     onClick={() => { navigate("/home"); }}>למעבר לפרויקט</button>
                 </React.Fragment>
             ) : (
                 <React.Fragment>
@@ -176,7 +158,7 @@ export default function ManagmentNewProject() {
                 </React.Fragment>
             )}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button
+                {/* <Button
                     style={{ backgroundColor: "#94db9f" , color:"white" }}
                     color="inherit"
                     disabled={activeStep === 0 || activeStep === steps.length - 1}
@@ -184,9 +166,9 @@ export default function ManagmentNewProject() {
                     sx={{ mr: 1 }}
                 >
                     חזרה
-                </Button>
+                </Button> */}
                 <Box sx={{ flex: '1 1 auto' }} />
-                {activeStep != 1 && <Button
+                {activeStep != 3 && <Button
                     style={{ backgroundColor: "#94db9f" , color:"white"}}
                     onClick={handleNext} type="submit">
                     {activeStep === steps.length - 1 ? 'סיום' : 'הבא'}

@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap';
+import { UserContext } from '../../context/userContext';
 
 export default function UserAssociation() {
 
 
-    const userEmail = [
-        "avraham@gmail.com",
-        "ytzchak@gmail.com",
-        "yaakov@gmail.com",
-        "sara@gmail.com", ,
-        "rivka@gmail.com",
-        "rachel@gmail.com",
-        "lea@gmail.com",
-    ];
+   const {users}=useContext(UserContext)
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredOptions, setFilteredOptions] = useState([]);
@@ -21,64 +14,37 @@ export default function UserAssociation() {
 
 
 
-    const handleSearchChange = (event) => {
-
-        const filteredData = userEmail.filter(option =>
-            option.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        const topFiveOptions = filteredData.slice(0, 5);
-
-        setFilteredOptions(topFiveOptions);
-        setSearchTerm(event.target.value);
-    };
 
 
     const handleAddUser = (e) => {
-        setUsersOfProject([...usersOfProject, searchTerm])
+        setUsersOfProject([...usersOfProject, e.target.value])
     }
 
-    const handleOptionChange = (e) => {
-        const selectedOption = e.target.value;
-        setSearchTerm(selectedOption);
-      };
 
 
 
-    useEffect(() => {
-        console.log(usersOfProject)
-
-    }, []);
+    
 
 
     return (
         <>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Add people to your project..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                <div>
-                    {filteredOptions.map((option, index) => (
-                        <option key={index} value={option} onClick={handleOptionChange}>
-                            {option}
-                        </option>
-                    ))}
-                </div>
- {/*                <select>
-                    {filteredOptions.map((option, index) => (
-                        <option key={index} value={option} onClick={handleOptionChange}>
-                            {option}
-                        </option>
-                    ))}
-                </select> */}
+<input
+      type="text"
+      list="cars"
+      value={searchTerm.includes("-new")?searchTerm.slice(0, -4):searchTerm}
+      onChange={handleAddUser}
+    />
+    <datalist id="cars">
+   
+      {users.map((o,index)=>{
+          return    <option key={index}>{o.email}</option>
+      })}
+           
 
-            </div>
+    </datalist>
             <Button className='mt-3' onClick={handleAddUser}>add a people</Button>
             {usersOfProject?.map((user, i) => (
-                <div key={i}>{user}</div>
+                <div key={i}>{user.email}</div>
             ))}
 
         </>
@@ -86,18 +52,3 @@ export default function UserAssociation() {
     )
 }
 
-/*     useEffect(() => {
-        const filteredData = userEmail.filter(option =>
-            option.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        const topFiveOptions = filteredData.slice(0, 5);
-
-        setFilteredOptions(topFiveOptions);
-
-    }, [searchTerm, userEmail]);
-
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    }; */

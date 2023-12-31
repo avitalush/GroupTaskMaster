@@ -1,27 +1,11 @@
-import { createContext, useState, useContext } from "react";
+import axios from "axios";
+import { createContext, useReducer, useState } from "react";
 
+import ProjectsReducer from './reducers/projectReducer'
 export const ProjectContext = createContext({})
 export default function ProviderProjec({ children }) {
-/*     const users=[{
-        id:'111',
-        name:'ttt'
-    },
-    {
-        id:'222',
-        name:'lll'
-    },
-    {
-        id:'333',
-        name:'ggg'
-    },
-    {
-        id:'444',
-        name:'fff'
-    },
-    {
-        id:'555',
-        name:'mmm'
-    }] */
+    const BASE_URL = "http://localhost:1200/api/v1/projects";
+    const [projects, dispach] = useReducer(ProjectsReducer, []);
 
     const projectsDetails=[{
         id:'111',
@@ -49,8 +33,51 @@ export default function ProviderProjec({ children }) {
 
 
     }]
+const setProjectsList=async(data)=>{
+    dispach({ type: "UPDATE_PROJECTS", payload: data })
+}
 
-    const shared = {projectsDetails}
+const getProjectById=(id)=>{
+    console.log(projects[0]);
+    return projects.filter(item => item.id == id )
+
+}
+
+const getTasksByIdProject=async(id)=>{
+    try {
+        let resp = await axios({
+            method:"get",
+            url: `${BASE_URL}/findProjectByIdReturnTasks/${id}`,
+           
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+
+            }
+        })
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+const addUsers=async(users,projectId)=>{
+    const joinedIds = users.join(',');
+    try {
+        let resp = await axios({
+            method:"get",
+            url: `${BASE_URL}/addUsers?projectId=${projectId}&userId=/userId=${joinedIds}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+
+            }
+        })
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+    const shared = {projectsDetails,projects,setProjectsList,getTasksByIdProject,getProjectById}
 
     return (
         <ProjectContext.Provider value={shared}>
