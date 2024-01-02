@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{useEffect,useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -19,28 +19,28 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/userContext';
+import { ProjectContext } from '../../context/projectCOntext';
 
 const drawerWidth = 240;
-
-
 const Main = styled('main', {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: `-${drawerWidth}px`, // Apply a negative margin to shift content to the right when the Drawer is open
+  ...(open && {
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    marginLeft: `-${drawerWidth}px`, // Apply a negative margin to shift content to the right when the Drawer is open
-    ...(open && {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0, // Reset margin to 0 when the Drawer is closed
-    }),
-  }));
+    marginLeft: 0,
+  }),
+}));
 
 
 const AppBar = styled(MuiAppBar, {
@@ -64,15 +64,24 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
 
+
+
 export default function PersistentDrawerLeft() {
-  const navigate=useNavigate();
+  const { findUserById } = React.useContext(UserContext);
+
+  const { projects } = React.useContext(ProjectContext);
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedProjectId, setSelectedProjectId] = useState(null); // New state
+
+
+  const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -81,6 +90,20 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const handleFindById = (id) => {
+   return findUserById(id)
+  };
+
+  const startChat = (user) => {
+    console.log(user);
+    setSelectedUser(user);
+  };
+
+  const showProjectDetails = (projectId) => {
+    console.log(projectId);
+    setSelectedProjectId(projectId);
+  };
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -92,16 +115,16 @@ export default function PersistentDrawerLeft() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2,p:0, ...(open && { display: 'none' }) }}
+            sx={{ mr: 2, p: 0, ...(open && { display: 'none' }) }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
             <button onClick={() => { navigate("/register") }}>
-              הרשמה 
+              הרשמה
             </button>
             <button onClick={() => { navigate("/login") }}>
-              התחברות 
+              התחברות
             </button>
           </Typography>
         </Toolbar>
@@ -126,34 +149,39 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
+          {projects?.map((project, index) => (
+            <ListItem key={index}>
+              <ListItemButton onClick={() => showProjectDetails(project)}>
+                <ListItemText primary={project.name} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+       
+        <ul>
+  {selectedProjectId?.users?.map((user, index) => (
+    <li key={index}>
+      <button onClick={() => startChat({ email: user.email, id: user._id })}>
+        {handleFindById(user)?.name}:
+      </button>
+    </li>
+  ))}
+  {selectedUser && <Chat selectedUser={selectedUser} />}
+</ul>
+
+        {/*
+
+
+  return (
+
+        */}
+
       </Drawer>
+
       <Main open={open}>
         <DrawerHeader />
-       
+
       </Main>
     </Box>
   );

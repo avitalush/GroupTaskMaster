@@ -28,6 +28,7 @@ function App() {
        <ProviderTask>
      <BrowserRouter>
           <SwipeableTemporaryDrawer />
+          
    <Routes> 
    <Route path='/home' element={<ShowAllProjcts/>}></Route>
    <Route path='/login' element={<Login/>}></Route>
@@ -35,6 +36,8 @@ function App() {
       <Route path='/register' element={<Main><AddUser/></Main>}></Route>
      <Route path='/project/:index' element={<Main><Kanban/></Main>}></Route>
        <Route path='/newproject' element={<ManagmentNewProject/>}></Route>
+       <Route path='/editproject/:idproject' element={<ManagmentNewProject/>}></Route>
+
        <Route path='/newtask/:idproject' element={<NewTask/>}></Route>
 
     </Routes>

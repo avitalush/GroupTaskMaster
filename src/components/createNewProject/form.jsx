@@ -1,63 +1,6 @@
-// import React, { useEffect, useState } from 'react'
-// import { Form, Button } from 'react-bootstrap';
-// import UserAssociation from './userAssociation';
-// import CreateCategory from './createCategory';
-// import { ChromePicker } from 'react-color';
 
-
-
-
-
-// export default function FormNeaProject() {
-
-
-//     const [color, setColor] = useState('#ffffff'); // Initial color
-
-//     const handleChange = (newColor) => {
-//         setColor(newColor.hex);
-//     };
-
-//     const handleSubmit = (event) => {
-//         event.preventDefault();
-//         console.log('Form submitted:', formData);
-//     };
-
-
-//     return (
-
-
-
-//         <Form onSubmit={handleSubmit}>
-
-
-//             <Form.Group controlId="formFirstName">
-//                 <Form.Label>Project Name: </Form.Label>
-//                 <Form.Control
-//                     type="text"
-//                     placeholder="Enter name of your project "
-//                     name="projectName"
-//                 // value={formData.firstName}
-//                 //onChange={handleChange}
-//                 />
-
-//                 <div>
-//                     <h2>Color Picker</h2>
-//                     <ChromePicker color={color} onChange={handleChange} />
-//                     <p>Choose a color for your project: {color}</p>
-//                 </div>
-
-//             </Form.Group>
-            
-          
-//             <CreateCategory></CreateCategory>
-//             <Button variant="primary" type="submit">
-//                 Submit
-//             </Button>
-//         </Form>
-//     )
-// }
 import { TextField } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useState,useEffect,useContext } from 'react'
 import BorderLinearProgress from "./BorderLinearProgress";
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
@@ -65,6 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
  import { ChromePicker } from 'react-color';
+import { UserContext } from '../../context/userContext';
 
 const FormNeaProject = ({formData,setFormData }) => {
   const [text, setText] = useState(" ממליצים לך בחום להוסיף תיאור נרחב ");
@@ -81,44 +25,40 @@ const FormNeaProject = ({formData,setFormData }) => {
         toggleColorPicker();
 
     };
-    const handleChange = ({ target }) => {
-      const cnt = target.value.length;
+    const handleChange = ( event ) => {
+      const cnt = event.target.value.length;
       setCount(cnt);
       switch (true) {
           case cnt >= 1 && cnt < 30:
               setColor("red");
               setText("מרגיש לנו שהתיאור שכתבת קצר מידי");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
+              handleChangeValue(event)
               break;
           case cnt >= 30 && cnt < 50:
               setColor("orange");
               setText("יופי, התיאור הולך לכיוון הנכון");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
-
+              handleChangeValue(event)
               break;
           case cnt >= 50 && cnt < 100:
               setColor("yellow");
               setText("עוד ממש קצת וזה שם");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
-
+              handleChangeValue(event)
               break;
           case cnt >= 100 && cnt < 120:
               setColor("light-green");
               setText("אוטוטו");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
-
+              handleChangeValue(event)
               break;
           case cnt >= 150:
               setColor("green");
               setText("בול!");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
-
+              handleChangeValue(event)
               break;
           default:
               setColor("grey");
               setText(" ממליצים לך בחום להוסיף תיאור נרחב ");
-              setFormData((prevState) => ({ ...prevState, description: cnt}));
-              break;
+              handleChangeValue(event);
+                            break;
       }
   }
   const handleChangeValue=(event)=>{
@@ -130,11 +70,10 @@ const FormNeaProject = ({formData,setFormData }) => {
   };
 
   const handleInputBlur = () => {
-    if (inputValue.endsWith('-new')) {
-      const newOption = inputValue.slice(0, -4).trim();
-      setOptions((prevOptions) => [...prevOptions, newOption]);
+   
+      setOptions((prevOptions) => [...prevOptions, inputValue]);
       setInputValue('');
-    }
+    
   };
 
   const handleAddOption = () => {
@@ -146,6 +85,10 @@ const FormNeaProject = ({formData,setFormData }) => {
    const toggleColorPicker = () => {
     setDisplayColorPicker(!displayColorPicker);
   };
+  const {usersList}=useContext(UserContext)
+  useEffect(() => {
+  }, []);
+  
 
     return (
         <div className="p-5">
@@ -172,6 +115,7 @@ const FormNeaProject = ({formData,setFormData }) => {
                     minRows={7}
                     inputProps={{ maxLength: 500 }}
                     style={{ width: "32rem" }}
+                    name='description'
                     label="תיאור"
                     onChange={handleChange}
                     defaultValue={formData ? formData.description : "זה המקום להוסיף תיאור כללי על הפרויקט"}

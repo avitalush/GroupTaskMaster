@@ -7,32 +7,7 @@ export default function ProviderProjec({ children }) {
     const BASE_URL = "http://localhost:1200/api/v1/projects";
     const [projects, dispach] = useReducer(ProjectsReducer, []);
 
-    const projectsDetails=[{
-        id:'111',
-        name:'aaa',
-        color:'#e088b2',
-        usersRef:['555','222','333'],
-        adminRef:'555'
 
-    },
-    {
-        id:'222',
-        name:'bbb',
-        color:'#29375c',
-        usersRef:['444','111'],
-        adminRef:'222'
-
-
-    },
-    {
-        id:'333',
-        name:'ccc',
-        color:'#42562d',
-        usersRef:['333','111','555'],
-        adminRef:'222'
-
-
-    }]
 const setProjectsList=async(data)=>{
     dispach({ type: "UPDATE_PROJECTS", payload: data })
 }
@@ -62,10 +37,11 @@ const getTasksByIdProject=async(id)=>{
 }
 const addUsers=async(users,projectId)=>{
     const joinedIds = users.join(',');
+    console.log(joinedIds);
     try {
         let resp = await axios({
-            method:"get",
-            url: `${BASE_URL}/addUsers?projectId=${projectId}&userId=/userId=${joinedIds}`,
+            method:"post",
+            url: `${BASE_URL}/addUsers?projectId=${projectId}&userId=${joinedIds}`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -77,7 +53,59 @@ const addUsers=async(users,projectId)=>{
         throw err;
     }
 }
-    const shared = {projectsDetails,projects,setProjectsList,getTasksByIdProject,getProjectById}
+const deleteById=async(id)=>{
+    try {
+        let resp = await axios({
+            method:"delete",
+            url: `${BASE_URL}/deleteProject/${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+
+            }
+        })
+
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+const deleteTaskById=async(idProject,idTask)=>{
+    try {
+        let resp = await axios({
+            method:"delete",
+            url: `${BASE_URL}/removeTask?projectId=${idProject}&userId=${idTask}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+
+            }
+        })
+console.log(resp);
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+const editProject = async (data) => {
+  
+    try {
+        let resp = await axios({
+            method: "patch",
+            url: `${BASE_URL}/editProject/${data.id}`,
+            data: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        })
+        console.log(resp);
+        return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+    const shared = {projects,setProjectsList,getTasksByIdProject,getProjectById,deleteById,addUsers,deleteTaskById,editProject}
 
     return (
         <ProjectContext.Provider value={shared}>

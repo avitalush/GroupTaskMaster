@@ -5,7 +5,8 @@ export default (state, action) => {
             state = payload;
             break;
             case 'UPDATE_TASKS':
-                state = payload;
+            state = [...payload];
+            return state;
                 break;
         case 'DELETE_RESORTS':
             state = state.filter(item => { item.id != payload })

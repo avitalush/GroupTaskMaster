@@ -7,7 +7,7 @@ export default (state, action) => {
             case 'UPDATE_PROJECTS':
                 state = payload;
                 break;
-        case 'DELETE_RESORTS':
+        case 'DELETE_PROJECTS':
             state = state.filter(item => { item.id != payload })
             break;
             case 'GET_BY_ID':
