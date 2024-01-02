@@ -1,5 +1,5 @@
 
-import React,{useContext} from 'react';
+import React,{useContext,useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -12,21 +12,27 @@ import swal from 'sweetalert';
 import Swal from 'sweetalert2';
 import CreateCategory from './createCategory';
 import { Alert, AlertTitle } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserAssociation from './userAssociation';
 import axios from 'axios';
 import CreateTasksList from './createTasksList';
 import { TaskContext } from '../../context/taskContext';
+import { ProjectContext } from '../../context/projectCOntext';
+import usePlaceholder from 'react-bootstrap/esm/usePlaceholder';
 
 const steps = [' יצירת פרויקט חדש', 'הכנסת משימות  ', 'הוספת משויכים לפרויקט  ', 'סיום'];
 
 export default function ManagmentNewProject() {
     const navigate = useNavigate();
+    const {idproject}=useParams();
     const [activeStep, setActiveStep] = useState(0);
     const [idProject, setIdProject] = useState(0);
     const { tasks ,addTasksListToProject} = useContext(TaskContext);
-
+    const { addUsers,projects,editProject} = useContext(ProjectContext);
+const [users,setUsers]=useState([]);
     const [skipped, setSkipped] = useState(new Set());
+    const [isEditProject, setIsEditProject] = useState(false);
+
     const [formData,setFormData]=useState({
         permissiontoAssociateTasks:false,
         name:"",
@@ -34,7 +40,15 @@ export default function ManagmentNewProject() {
         color:'#cc8686',
         categories:[]
     })
-
+    useEffect(() => {
+        if(idproject!==undefined){
+            console.log(idproject);
+let editProject=projects.find((p)=>p.id===idproject);
+setFormData(editProject);
+setIsEditProject(true);
+setIdProject(editProject.id)
+        }
+    }, []);
     const handleNext = () => {
         console.log("hi");
         if (activeStep === steps.length - 1) {
@@ -42,7 +56,13 @@ export default function ManagmentNewProject() {
         }
         let newSkipped = skipped;
         if (activeStep == 0) {
-            createProject();
+            if(isEditProject){
+                handleEditProject();
+            }
+            else{
+                 createProject();
+            }
+           
         }
         if (activeStep == 1) {
             createTasks();
@@ -59,10 +79,12 @@ export default function ManagmentNewProject() {
 const createTasks=()=>{
     addTasksListToProject();
     
-    //setActiveStep((prevActiveStep) => prevActiveStep + 1);
+setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
 }
 const createUsers=()=>{
+    let idUsers=users.map((u)=>u.id);
+    addUsers(idUsers,idProject)
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
 }
@@ -90,9 +112,9 @@ const apiProject=async(_url, _method, _body = {})=>{
             const url = "http://localhost:1200/api/v1/projects/createProject";
              const { data } = await apiProject(url, "POST",formData);
           
-            setIdProject(data.id);
+            setIdProject(data.project.id);
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
-           
+          
 
         }
         catch (err) {
@@ -100,10 +122,22 @@ const apiProject=async(_url, _method, _body = {})=>{
         }
 
     }
+    const handleEditProject = async () => {
+        console.log({formData});
+        try {
+           
+             const { data } = await editProject(formData);
+            setActiveStep((prevActiveStep) => prevActiveStep + 2);
+         
 
-    const onSubmit = (data) => {
-       
+        }
+        catch (err) {
+            console.log(err);
+        }
+
     }
+    
+
 
     const editUser = async (obj) => {
        
@@ -120,7 +154,7 @@ const apiProject=async(_url, _method, _body = {})=>{
             case 1:
                 return <CreateTasksList idProject={idProject}  tasks={tasks}/>;
                 case 2:
-                    return <UserAssociation />;
+                    return <UserAssociation setUsers={setUsers}/>;
             default:
                 return;
         }

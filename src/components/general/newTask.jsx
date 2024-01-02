@@ -26,7 +26,8 @@ const [formData,setFormData]=useState({
     });
 
     const onSubmit = () => {
-        if(isDashbord){
+        console.log(isDashbord);
+        if(isDashbord===undefined){
                     doApi();
 
         }
@@ -40,7 +41,7 @@ const [formData,setFormData]=useState({
             
             const { data } = await addTaskToProject("/createTask", "POST", formData);
             console.log(data);
-            if(data.status!==200){
+            if(data.status!=="success"){
                 swal({
                     title: "המשימה לא הוכנס כראוי-נסה שוב",
                     icon: "warning",

@@ -1,14 +1,13 @@
-import { createContext, useState, useContext ,useReducer} from "react";
+import { createContext, useState, useContext, useReducer } from "react";
 import UserReduces from "./reducers/userReducer"
 import axios from 'axios';
 
 export const UserContext = createContext({})
 export default function ProviderUser({ children }) {
-    const currentUser='111';
     const BASE_URL = 'http://localhost:1200/api/v1/users';
-const [users, dispach] = useReducer(UserReduces, []);
-
-    const signIn =async(_url, _method, _body = {})=>{
+    const [usersList, dispach] = useReducer(UserReduces, []);
+const [currentId,setCurrentId]=useState(0);
+    const signIn = async (_url, _method, _body = {}) => {
         try {
             let resp = await axios({
                 method: _method,
@@ -16,16 +15,17 @@ const [users, dispach] = useReducer(UserReduces, []);
                 data: JSON.stringify(_body),
                 headers: {
                     'Content-Type': 'application/json',
-                    
+
                 }
             })
-            console.log(resp.url);
-          return resp;
+            setCurrentId(_body.email);
+             return resp;
         } catch (err) {
             throw err;
         }
     };
-    const getAllUsersFromServer =async()=>{
+
+    const getAllUsersFromServer = async () => {
 
         try {
             let resp = await axios({
@@ -33,17 +33,35 @@ const [users, dispach] = useReducer(UserReduces, []);
                 url: `${BASE_URL}/getAllUsers`,
                 headers: {
                     'Content-Type': 'application/json',
-                    
+
                 }
-            })
-            dispach({ type: "UPDATE_PROJECTS", payload: resp.data.users })
-            console.log(resp.data.users);
-return resp
+            }) 
+            updateUserId(resp.data.users);
+          
+            dispach({ type: "UPDATE_USERS", payload: resp.data.users })
+          
+            
+            return resp;
         } catch (err) {
             throw err;
         }
     };
-    const shared = { users, currentUser,signIn,getAllUsersFromServer}
+    const findUserById=(id)=>{
+        return usersList.find((u)=>u.id===id);
+    }
+    const findUserByEmail=(email)=>{
+        console.log(email);
+      let c=usersList.find((u)=>u.email===email);
+      console.log(c);
+      return c;
+    }
+    const updateUserId=(data)=>{
+      let c=data.find((u)=>u.email===currentId);
+      console.log(c);
+      setCurrentId(c)
+    }
+    const shared = { usersList, signIn, getAllUsersFromServer,findUserById,findUserByEmail,currentId}
+            console.log(usersList);
 
     return (
         <UserContext.Provider value={shared}>
