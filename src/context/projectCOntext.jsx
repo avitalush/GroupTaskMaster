@@ -26,7 +26,6 @@ const getTasksByIdProject=async(id)=>{
            
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem("token")}`
 
             }
         })
@@ -64,7 +63,12 @@ const deleteById=async(id)=>{
 
             }
         })
+        console.log(resp.data.status=="success");
+if(resp.data.status=="success"){
+   
+    dispach({ type: "DELETE_PROJECTS", payload: id })
 
+}
       return resp;
     } catch (err) {
         throw err;
@@ -105,7 +109,27 @@ const editProject = async (data) => {
         throw err;
     }
 }
-    const shared = {projects,setProjectsList,getTasksByIdProject,getProjectById,deleteById,addUsers,deleteTaskById,editProject}
+const getAllTasksByIdUser=async(idUser)=>{
+    console.log(idUser);
+    try {
+        let resp = await axios({
+            method:"get",
+            url: `${BASE_URL}/getAllTasks?idUser=${idUser}`,
+           
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+
+            }
+        })
+      console.log(resp); ;
+    } catch (err) {
+        throw err;
+    }
+    // dispach({ type: "UPDATE_PROJECTS", payload: data })
+
+}
+    const shared = {projects,setProjectsList,getTasksByIdProject,getProjectById,deleteById,addUsers,deleteTaskById,editProject,getAllTasksByIdUser}
 
     return (
         <ProjectContext.Provider value={shared}>

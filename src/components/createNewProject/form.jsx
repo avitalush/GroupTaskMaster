@@ -137,7 +137,10 @@ const FormNeaProject = ({formData,setFormData }) => {
     </FormControl>
     
     <br /> <br />
-    <div>
+    <div className="d-flex">
+      <div>
+
+      
       <input
         type="text"
         list="cars"
@@ -152,6 +155,12 @@ const FormNeaProject = ({formData,setFormData }) => {
         ))}
       </datalist>
       <button onClick={handleAddOption}>Add Option</button>
+      </div>
+      <div>
+  {formData.categories.map((category, index) => (
+    <p key={index}>{category}</p>
+  ))}
+</div>
     </div>
     <div>
     <button onClick={toggleColorPicker} style={{ color: formData.color }}>Toggle Color Picker - {formData.color}</button>

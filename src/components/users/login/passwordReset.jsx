@@ -1,14 +1,17 @@
 import Button from '@mui/material/Button';
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useParams } from 'react-router-dom';
+import { UserContext } from '../../../context/userContext';
 
-const PasswordReset = ({ email, setOpen }) => {
+const PasswordReset = () => {
     const [newPassword, setnewPassword] = useState("");
     const [confirmPassword, setconfirmPassword] = useState("");
     const [eye, setEye] = useState(false);
     const [flag, setFlag] = useState(false);
     const [errorState, setErrorState] = useState("");
+    const {handleResetPassword}=useContext(UserContext)
     const strongRejex = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/);
-
+const {token}=useParams();
     const handleNewPassword = (event) => {
         setnewPassword(event.target.value);
         if (strongRejex.test(event.target.value)) {
@@ -30,14 +33,17 @@ const PasswordReset = ({ email, setOpen }) => {
     }
 
     const resetPassword = () => {
-        if (errorState.length > 0 || newPassword == '' || confirmPassword == '') {
-            setFlag(true);
-        } else {
-            if (newPassword == confirmPassword) {
-                // dispatch(changePassword({ Password: newPassword, Email: email }));
-                setOpen(false)
-            }
-        }
+        // if (errorState.length > 0 || newPassword == '' || confirmPassword == '') {
+        //     setFlag(true);
+        // } else {
+        //     if (newPassword == confirmPassword) {
+        //         // dispatch(changePassword({ Password: newPassword, Email: email }));
+        //         setOpen(false)
+        //     }
+        // }
+        let pass={newPassword:newPassword}
+      const resp=handleResetPassword(token,pass);
+      console.log(resp);
     }
     return <div>
         <h4 className="text-center">אתחול סיסמא: </h4>

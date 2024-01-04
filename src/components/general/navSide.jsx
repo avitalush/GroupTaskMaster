@@ -102,8 +102,15 @@ export default function PersistentDrawerLeft() {
   const showProjectDetails = (projectId) => {
     console.log(projectId);
     setSelectedProjectId(projectId);
-  };
+    navigate(`project/${projectId.id}`);
+    handleDrawerClose(); 
 
+  };
+  const handleAllProjects = () => {
+    navigate(`/home`);
+   
+
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -149,6 +156,11 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
+        <ListItem >
+              <ListItemButton onClick={() => handleAllProjects()}>
+                <ListItemText primary={"כל הפרויקטים"} />
+              </ListItemButton>
+            </ListItem>
           {projects?.map((project, index) => (
             <ListItem key={index}>
               <ListItemButton onClick={() => showProjectDetails(project)}>

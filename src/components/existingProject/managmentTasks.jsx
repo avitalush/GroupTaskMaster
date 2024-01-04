@@ -91,18 +91,18 @@ function Kanban() {
   const { findUserByEmail, currentId } = useContext(UserContext);
   const [project, setProject] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
-  const [filteredTasks, setFilteredTasks] = useState(tasks);  
+  const [filteredTasks, setFilteredTasks] = useState([]);  
+  const { index } = useParams();
 
   useEffect(() => {
     console.log(currentId, project);
     if (currentId.id === project[0]?.admin) {
       setIsAdmin(true);
     }
-  }, [isAdmin, project]);
+  }, [isAdmin, project,index]);
 
   const [tasks, setTasks] = useState([
   ]);
-  const { index } = useParams();
   const navigate = useNavigate();
   const updateTask = (id, status) => {
     let t = tasks.find((t) => t.id === id);
@@ -128,7 +128,7 @@ function Kanban() {
   useEffect(() => {
     fetchData();
     console.log(project);
-  }, []);
+  }, [index]);
   const handleAddTask = () => {
     navigate(`/newtask/${project[0].id}`)
   }

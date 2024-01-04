@@ -6,14 +6,11 @@ import { TaskContext } from '../../../context/taskContext';
 import { Select } from 'antd';
 const { Option } = Select;
 const TaskDetails = ({ task ,project,isAdmin,updateFormData,formData }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);  // Add this line
-  const [selectedProfile, setSelectedProfile] = useState(task && task.user ? task.user : null);
     const [note, setnote] = useState('');
   const [notes, setnotes] = useState([]);
-  const { findUserById,usersList} = useContext(UserContext);
+  const { findUserById,usersList,currentId} = useContext(UserContext);
   const { addNote,editTask} = useContext(TaskContext);
-
-  
+const [users,setUsers]=useState([isAdmin?project.users:currentId.id])  
 let idUser=0;
 const handlenotesubmit = (e) => {
   e.preventDefault();
@@ -66,6 +63,9 @@ onChange={(e) => updateFormData({ ...formData, date_created: e.target.value })}/
         <Form.Group className="mb-3">
   <Form.Label>Assignees</Form.Label>
   <div style={{ position: "relative" }}>
+    {project.permissiontoAssociateTasks?(
+
+   
     <Select
       disabled={!isAdmin}
       style={{ width: '100%' }}
@@ -79,6 +79,21 @@ onChange={(e) => updateFormData({ ...formData, date_created: e.target.value })}/
         </Option>
       ))}
     </Select>
+     ):(
+<Select
+  style={{ width: '100%' }}
+  placeholder="Select Assignees"
+  value={formData.user}
+  onChange={(value) => updateFormData({ ...formData, user: value })}
+>
+  {(project?.users || []).map((user, index) => (
+    <Option key={index} value={user}>
+      {user.email}
+    </Option>
+  ))}
+</Select>
+
+     )}
   </div>
 </Form.Group>
 

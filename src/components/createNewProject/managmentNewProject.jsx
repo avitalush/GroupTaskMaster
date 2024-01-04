@@ -126,13 +126,21 @@ const apiProject=async(_url, _method, _body = {})=>{
         console.log({formData});
         try {
            
-             const { data } = await editProject(formData);
-            setActiveStep((prevActiveStep) => prevActiveStep + 2);
+             const { satus } = await editProject(formData);
+            
+                             setActiveStep((prevActiveStep) => prevActiveStep + 2);
+
+             
          
 
         }
         catch (err) {
-            console.log(err);
+            console.log(err.response.data.error);               
+            swal({
+                title: err.response.data.error,
+                icon: "warning",
+                button: "אישור",
+            });
         }
 
     }

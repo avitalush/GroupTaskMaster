@@ -1,12 +1,14 @@
 import { createContext, useState, useContext, useReducer } from "react";
 import UserReduces from "./reducers/userReducer"
 import axios from 'axios';
+import { ProjectContext } from "./projectCOntext";
 
 export const UserContext = createContext({})
 export default function ProviderUser({ children }) {
     const BASE_URL = 'http://localhost:1200/api/v1/users';
     const [usersList, dispach] = useReducer(UserReduces, []);
 const [currentId,setCurrentId]=useState(0);
+const {getAllTasksByIdUser}=useContext(ProjectContext)
     const signIn = async (_url, _method, _body = {}) => {
         try {
             let resp = await axios({
@@ -58,10 +60,63 @@ const [currentId,setCurrentId]=useState(0);
     const updateUserId=(data)=>{
       let c=data.find((u)=>u.email===currentId);
       console.log(c);
+     const {ddd}= getAllTasksByIdUser(c.id);
+     console.log(ddd);
       setCurrentId(c)
     }
-    const shared = { usersList, signIn, getAllUsersFromServer,findUserById,findUserByEmail,currentId}
-            console.log(usersList);
+    const handleforgetPassword = async (data) => {
+        console.log(data);
+        try {
+            let resp = await axios({
+                method:"post",
+                url: `${BASE_URL}/forgetPassword`,
+                data: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+
+                }
+            })
+             return resp;
+        } catch (err) {
+            throw err;
+        }
+    };
+    const addUser = async (data) => {
+        console.log(data);
+        try {
+            let resp = await axios({
+                method:"post",
+                url: `${BASE_URL}/register`,
+                data: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+
+                }
+            })
+             return resp;
+        } catch (err) {
+            throw err;
+        }
+    };
+    const handleResetPassword = async (token,data) => {
+        console.log(data);
+        try {
+            let resp = await axios({
+                method:"post",
+                url: `${BASE_URL}/resetPassword/${token}`,
+                data: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+
+                }
+            })
+             return resp;
+        } catch (err) {
+            throw err;
+        }
+    };
+    const shared = { usersList, signIn, getAllUsersFromServer,findUserById,findUserByEmail,currentId,handleforgetPassword,addUser,handleResetPassword}
+            
 
     return (
         <UserContext.Provider value={shared}>
