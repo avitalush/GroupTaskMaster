@@ -8,12 +8,12 @@ export default (state, action) => {
                 state = payload;
                 break;
         case 'DELETE_PROJECTS':
-            state = state.filter(item => { item.id != payload })
+            state = state.filter(item =>  item.id !== payload )
             break;
             case 'GET_BY_ID':
                return state.filter(item => { item.id === payload })
                 break;
-        case 'ADD_RESORT':
+        case 'ADD_PROJECT':
             state = [...state, payload];
             break;
         case 'EDIT_RESORT':

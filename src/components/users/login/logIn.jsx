@@ -127,7 +127,7 @@ const apiLogIn=async(_url, _method, _body = {})=>{
                     >  התחבר  </Button>
 
                     <Divider className='w-30 text-dark my-3' />
-                    {/* <p className="move" onClick={openReset}>שכחתי סיסמא</p> */}
+                    <p className="move" onClick={openReset} style={{cursor:"pointer"}}>שכחתי סיסמא</p>
 
                     {open ? <ForgetPassword email={mail} setOpen={setOpen} /> : null}
                     <p className="move link" onClick={() => { navigate("/register"); }} style={{cursor:"pointer"}}> לא רשום? עבור להרשמה </p>

@@ -12,10 +12,12 @@ import NewProject from './newProject';
 export default function ShowAllProjcts() {
 
 
-    const { getAllUsersFromServer } = useContext(UserContext);
-    const { projects } = useContext(ProjectContext);
+    const { getAllUsersFromServer,currentId } = useContext(UserContext);
+    const { projects ,getAllTasksByIdUser} = useContext(ProjectContext);
 const fetchData=async()=>{
-    const {data}=await getAllUsersFromServer();
+    console.log(currentId);
+    await getAllUsersFromServer();
+   
 }
     useEffect(() => {
       fetchData();

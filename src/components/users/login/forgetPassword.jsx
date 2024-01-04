@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PasswordReset from './passwordReset';
 import { Fragment } from 'react';
+import { UserContext } from '../../../context/userContext';
 
 const style = {
     position: 'absolute',
@@ -22,20 +23,13 @@ export default function ForgetPassword({ email, setOpen }) {
     const [emailClone, setEmailClone] = React.useState(email);
     const [isError, setIsError] = React.useState(true);
     const [flag, setFlag] = React.useState(false);
-
+const {handleforgetPassword}=React.useContext(UserContext)
     const resetPassword = () => {
-        // getUserByEmail(emailClone)
-        //   .then(x => {
-        //     if (x.data != null) {
-        //       setIsError(true);
-        //       setFlag(true);
-        //     }
-        //     else {
-        //       setIsError(false);
-        //       setFlag(false);
-        //     }
-        //   })
-        //   .catch(err => console.log(err));
+            //   setIsError(true);
+            //   setFlag(true);
+            const resp=handleforgetPassword({email:emailClone});
+            console.log(resp);
+          
     }
 
     return <div>
@@ -60,7 +54,7 @@ export default function ForgetPassword({ email, setOpen }) {
                 </Fragment> :
 
                     <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                        <PasswordReset email={emailClone} setOpen={setOpen} />
+                        <PasswordReset />
                     </Typography>}
             </Box>
         </Modal>

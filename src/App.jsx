@@ -18,13 +18,16 @@ import { Home } from '@mui/icons-material'
 import ProviderTask from './context/taskContext'
 import DynamicSelect from './components/existingProject/navFilter/byUser'
 import NewTask from './components/general/newTask'
+import PasswordReset from './components/users/login/passwordReset'
 
 
 function App() {
 
-  return (
+  return (  
+  <ProviderProjec>
+
     <ProviderUser>
-     <ProviderProjec>
+   
        <ProviderTask>
      <BrowserRouter>
           <SwipeableTemporaryDrawer />
@@ -32,9 +35,10 @@ function App() {
    <Routes> 
    <Route path='/home' element={<ShowAllProjcts/>}></Route>
    <Route path='/login' element={<Login/>}></Route>
+   <Route path='/resetpassword/:token' element={<Main><PasswordReset/></Main>}></Route>
 
       <Route path='/register' element={<Main><AddUser/></Main>}></Route>
-     <Route path='/project/:index' element={<Main><Kanban/></Main>}></Route>
+     <Route path='/project/:index' element={<Kanban/>}></Route>
        <Route path='/newproject' element={<ManagmentNewProject/>}></Route>
        <Route path='/editproject/:idproject' element={<ManagmentNewProject/>}></Route>
 
@@ -43,8 +47,9 @@ function App() {
     </Routes>
      </BrowserRouter> 
      </ProviderTask>
-   </ProviderProjec> 
+ 
    </ProviderUser>
+   </ProviderProjec> 
   )
 }
 
