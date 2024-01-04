@@ -9,14 +9,24 @@ import ShowAllProjcts from './components/home/showAllProjcts';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProviderUser from './context/userConrext';
 import ProviderProjec from './context/projectCOntext';
-
+import BrowserRouter from 
 
 function App() {
 
   return (
-    <>
+    <ProviderProjec>
+      <BrowserRouter>
 
-     </>
+        <Routes>
+
+          <Route path='/' element={<Main><ShowAllProjcts /></Main>}></Route>
+          <Route path='/project/:index' element={<Main><Kanban /></Main>}></Route>
+          <Route path='/newproject' element={<ManagmentNewProject />}></Route>
+
+        </Routes>
+      </BrowserRouter>
+
+    </ProviderProjec>
   )
 }
 
