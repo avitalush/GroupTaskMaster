@@ -1,103 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import { Delete } from '@mui/icons-material';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { UserContext } from '../../context/userContext';
 
-export default function UserAssociation() {
+export default function UserAssociation({setUsers}) {
+  const { usersList } = useContext(UserContext);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
-    const userEmail = [
-        "avraham@gmail.com",
-        "ytzchak@gmail.com",
-        "yaakov@gmail.com",
-        "sara@gmail.com", ,
-        "rivka@gmail.com",
-        "rachel@gmail.com",
-        "lea@gmail.com",
-    ];
+  const handleAddUser = (e) => {
+    const selectedUser = usersList.find((user) => user.email === e.target.value);
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filteredOptions, setFilteredOptions] = useState([]);
-    const [usersOfProject, setUsersOfProject] = useState([]);
-
-
-
-
-    const handleSearchChange = (event) => {
-
-        const filteredData = userEmail.filter(option =>
-            option.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        const topFiveOptions = filteredData.slice(0, 5);
-
-        setFilteredOptions(topFiveOptions);
-        setSearchTerm(event.target.value);
-    };
-
-
-    const handleAddUser = (e) => {
-        setUsersOfProject([...usersOfProject, searchTerm])
+    if (selectedUser) {
+      setSearchTerm('');
+      setSelectedUsers([...selectedUsers, selectedUser]);
+      setUsers([...selectedUsers, selectedUser])
     }
+  };
 
-    const handleOptionChange = (e) => {
-        const selectedOption = e.target.value;
-        setSearchTerm(selectedOption);
-      };
+  const handleRemoveUser = (email) => {
+    const updatedUsers = selectedUsers.filter((user) => user.email !== email);
+    setSelectedUsers(updatedUsers);
+    setUsers(updatedUsers)
+  };
 
+  return (
+    <>
+      <input
+        type="text"
+        list="cars"
+        value={searchTerm.includes('-new') ? searchTerm.slice(0, -4) : searchTerm}
+        onChange={handleAddUser}
+      />
+      <datalist id="cars">
+        {usersList?.map((user, index) => (
+          <option key={index}>{user.email}</option>
+        ))}
+      </datalist>
 
-
-    useEffect(() => {
-        console.log(usersOfProject)
-
-    }, []);
-
-
-    return (
-        <>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Add people to your project..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                <div>
-                    {filteredOptions.map((option, index) => (
-                        <option key={index} value={option} onClick={handleOptionChange}>
-                            {option}
-                        </option>
-                    ))}
-                </div>
- {/*                <select>
-                    {filteredOptions.map((option, index) => (
-                        <option key={index} value={option} onClick={handleOptionChange}>
-                            {option}
-                        </option>
-                    ))}
-                </select> */}
-
-            </div>
-            <Button className='mt-3' onClick={handleAddUser}>add a people</Button>
-            {usersOfProject?.map((user, i) => (
-                <div key={i}>{user}</div>
-            ))}
-
-        </>
-
-    )
+      <div>
+        {selectedUsers.map((user, index) => (
+          <div key={index}>
+            {user.email}
+            <Button variant="danger" onClick={() => handleRemoveUser(user.email)}>
+              <Delete/>
+            </Button>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }
-
-/*     useEffect(() => {
-        const filteredData = userEmail.filter(option =>
-            option.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        const topFiveOptions = filteredData.slice(0, 5);
-
-        setFilteredOptions(topFiveOptions);
-
-    }, [searchTerm, userEmail]);
-
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    }; */

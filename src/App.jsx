@@ -2,31 +2,58 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import KanbanBoard from './components/existingProject/colums/KanbanBoard'
 import FormNeaProject from './components/createNewProject/form'
 import ManagmentNewProject from './components/createNewProject/managmentNewProject'
 import ShowAllProjcts from './components/home/showAllProjcts';
+import AdminPage from './components/home/adminPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ProviderUser from './context/userConrext';
+import ProviderUser from './context/userContext';
 import ProviderProjec from './context/projectCOntext';
-import BrowserRouter from 
+import Kanban from './components/existingProject/managmentTasks'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import SwipeableTemporaryDrawer from './components/general/navSide'
+import { Main } from './components/general/mainSide'
+import Login from './components/users/login/logIn'
+import Admin from './components/users/admin'
+import AddUser from './components/users/addUser'
+import { Home } from '@mui/icons-material'
+import ProviderTask from './context/taskContext'
+import DynamicSelect from './components/existingProject/navFilter/byUser'
+import NewTask from './components/general/newTask'
+import PasswordReset from './components/users/login/passwordReset'
+
 
 function App() {
 
-  return (
-    <ProviderProjec>
-      <BrowserRouter>
+  return (  
+  <ProviderProjec>
 
-        <Routes>
+    <ProviderUser>
+   
+       <ProviderTask>
+     <BrowserRouter>
+          <SwipeableTemporaryDrawer />
+          
+   <Routes> 
+   <Route path='/home' element={<ShowAllProjcts/>}></Route>
+   <Route path='/adminPage' element={<AdminPage/>}></Route>
+   <Route path='/login' element={<Login/>}></Route>
+   <Route path='/admin' element={<Admin/>}></Route>
+   <Route path='/resetpassword/:token' element={<Main><PasswordReset/></Main>}></Route>
 
-          <Route path='/' element={<Main><ShowAllProjcts /></Main>}></Route>
-          <Route path='/project/:index' element={<Main><Kanban /></Main>}></Route>
-          <Route path='/newproject' element={<ManagmentNewProject />}></Route>
+      <Route path='/register' element={<Main><AddUser/></Main>}></Route>
+     <Route path='/project/:index' element={<Kanban/>}></Route>
+       <Route path='/newproject' element={<ManagmentNewProject/>}></Route>
+       <Route path='/editproject/:idproject' element={<ManagmentNewProject/>}></Route>
 
-        </Routes>
-      </BrowserRouter>
+       <Route path='/newtask/:idproject' element={<NewTask/>}></Route>
 
-    </ProviderProjec>
+    </Routes>
+     </BrowserRouter> 
+     </ProviderTask>
+ 
+   </ProviderUser>
+   </ProviderProjec> 
   )
 }
 

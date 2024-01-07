@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from '../../context/userConrext';
+import React, { useEffect, useContext } from 'react';
+import { UserContext } from '../../context/userContext';
 import { ProjectContext } from '../../context/projectCOntext';
 import SingleProject from './singleProject';
 import { Button } from 'react-bootstrap';
 import ManagmentNewProject from '../createNewProject/managmentNewProject';
+import NewProject from './newProject';
 
 
 
@@ -11,30 +12,25 @@ import ManagmentNewProject from '../createNewProject/managmentNewProject';
 export default function ShowAllProjcts() {
 
 
-    const { currentUser } = useContext(UserContext);
-    const { projectsDetails } = useContext(ProjectContext);
-    console.log(projectsDetails);
-
-
-/*     const isUserAllowed = (project) => {
-        const isManager = project.adminRef === currentUser;
-        const isUserInProject = project.users.includes(currentUser);
-        return isManager || isUserInProject;
-    }; */
-    //const filteredProjects = (projectsDetails || []).filter((project) => isUserAllowed(project));
-
-   // console.log(filteredProjects);
+    const { getAllUsersFromServer,currentId } = useContext(UserContext);
+    const { projects ,getAllTasksByIdUser} = useContext(ProjectContext);
+const fetchData=async()=>{
+    console.log(currentId);
+    await getAllUsersFromServer();
+   
+}
+    useEffect(() => {
+      fetchData();
+      }, []); 
+    
 
     return (
         <div>
 
-            {projectsDetails.map((project) => (
+            {projects?.map((project) => (
                 <SingleProject key={project.id} project={project} />
             ))}
-{/*             כאן צריך להיות ניווט ליצירת פרוייקט חדש
- */}            <Button>
-               +
-            </Button>
+        <NewProject/>
 
         </div>
     )
