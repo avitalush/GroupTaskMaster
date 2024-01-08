@@ -1,10 +1,14 @@
-import React,{useContext} from 'react'
+import React,{useContext,useEffect} from 'react'
 import { TaskContext } from '../../context/taskContext';
 import NewTask from '../general/newTask'
 
 export default function CreateTasksList({idProject}) {
     const { tasks } = useContext(TaskContext);
-
+    
+    useEffect(() => {
+     console.log(idProject);
+    }, []);
+    
   return (
     <div className="d-flex mx-auto pt-5 container center form">
         <ul className="form">

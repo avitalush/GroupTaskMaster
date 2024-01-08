@@ -8,7 +8,6 @@ export default function ProviderUser({ children }) {
     const BASE_URL = 'http://localhost:1200/api/v1/users';
     const [usersList, dispach] = useReducer(UserReduces, []);
 const [currentId,setCurrentId]=useState(0);
-const {getAllTasksByIdUser}=useContext(ProjectContext)
     const signIn = async (_url, _method, _body = {}) => {
         try {
             let resp = await axios({
@@ -48,6 +47,7 @@ const {getAllTasksByIdUser}=useContext(ProjectContext)
             throw err;
         }
     };
+
     const findUserById=(id)=>{
         return usersList.find((u)=>u.id===id);
     }
@@ -60,9 +60,25 @@ const {getAllTasksByIdUser}=useContext(ProjectContext)
     const updateUserId=(data)=>{
       let c=data.find((u)=>u.email===currentId);
       console.log(c);
-     const {ddd}= getAllTasksByIdUser(c.id);
-     console.log(ddd);
       setCurrentId(c)
+    }
+    const getAllTasksByIdUser=async()=>{
+        try {
+            let resp = await axios({
+                method:"get",
+                url: `${BASE_URL}/getAllTasks?userId=${currentId.id}`,
+                headers: {
+                    'Content-Type': 'application/json',
+    
+                }
+            })
+          console.log(resp); 
+          return resp;
+        } catch (err) {
+            throw err;
+        }
+        // dispach({ type: "UPDATE_PROJECTS", payload: data })
+    
     }
     const handleforgetPassword = async (data) => {
         console.log(data);
@@ -115,7 +131,34 @@ const {getAllTasksByIdUser}=useContext(ProjectContext)
             throw err;
         }
     };
-    const shared = { usersList, signIn, getAllUsersFromServer,findUserById,findUserByEmail,currentId,handleforgetPassword,addUser,handleResetPassword}
+    const handleUpload = async (file) => {
+        if (!file) {
+          console.error('No file selected');
+          return;
+        }
+    
+        const formData = new FormData();
+        formData.append('image', file);
+    
+        try {
+          const response = await fetch('http://localhost:1200/api/v1/images/upload', {
+            method: 'POST',
+            body: formData,
+          });
+    
+          if (response.ok) {
+              console.log("koko");
+            const result = await response.json();
+           console.log(result);
+            return  result.data.secure_url;
+          } else {
+            console.error('Image upload failed');
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+    }
+    const shared = { usersList, signIn, getAllUsersFromServer,findUserById,findUserByEmail,currentId,handleforgetPassword,addUser,handleResetPassword,handleUpload,getAllTasksByIdUser}
             
 
     return (

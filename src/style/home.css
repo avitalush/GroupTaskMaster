@@ -1,0 +1,50 @@
+/* styles.css */
+body {
+    margin: 0;
+   
+    display: flex;
+  }
+  
+  .split-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+  }
+  
+  .left-side {
+    width: 50%;
+    height: 100%;
+    background-color: blue; 
+    border-right: solid 1px white;
+    display: flex;
+    flex-direction: column; /* הוספת כיווניות עמודה */
+    justify-content: flex-end; /* מיקום הטקסט בתחתית */
+  }
+  
+  .right-side {
+    width: 50%;
+    height: 100%;
+    background-color: black; /* רקע שחור */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .center-content {
+      position: relative;
+      top:-10%;
+    text-align: center;
+    color: blue;
+    text-shadow: 1px 1px 0 white;
+  }
+  
+  .main-heading {
+    font-size: 3em;
+    margin-bottom: 10px;
+    margin-top: auto; /* מיקום המבנה בסוף התא */
+  }
+  
+  .sub-text {
+    font-size: 1.5em;
+    margin-bottom: auto; /* מיקום המבנה בסוף התא */
+  }

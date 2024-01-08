@@ -34,6 +34,42 @@ const getTasksByIdProject=async(id)=>{
         throw err;
     }
 }
+const getDatatToGraph=async(id)=>{
+    try {
+        let resp = await axios({
+            method:"get",
+            url: `${BASE_URL}/graphLeah/${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+
+            }
+        })
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
+const apiProject=async(_url, _method, _body = {})=>{
+    console.log(_body);
+    try {
+        let resp = await axios({
+            method: _method,
+            url: _url,
+            data: JSON.stringify(_body),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+          
+        })
+        console.log(resp.data);
+        dispach({ type: "ADD_PROJECT", payload:resp.data.project })
+
+      return resp;
+    } catch (err) {
+        throw err;
+    }
+}
 const addUsers=async(users,projectId)=>{
     const joinedIds = users.join(',');
     console.log(joinedIds);
@@ -109,27 +145,8 @@ const editProject = async (data) => {
         throw err;
     }
 }
-const getAllTasksByIdUser=async(idUser)=>{
-    console.log(idUser);
-    try {
-        let resp = await axios({
-            method:"get",
-            url: `${BASE_URL}/getAllTasks?idUser=${idUser}`,
-           
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem("token")}`
 
-            }
-        })
-      console.log(resp); ;
-    } catch (err) {
-        throw err;
-    }
-    // dispach({ type: "UPDATE_PROJECTS", payload: data })
-
-}
-    const shared = {projects,setProjectsList,getTasksByIdProject,getProjectById,deleteById,addUsers,deleteTaskById,editProject,getAllTasksByIdUser}
+    const shared = {projects,setProjectsList,getTasksByIdProject,getProjectById,deleteById,addUsers,deleteTaskById,editProject,apiProject,getDatatToGraph}
 
     return (
         <ProjectContext.Provider value={shared}>

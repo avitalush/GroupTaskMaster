@@ -28,7 +28,7 @@ export default function ManagmentNewProject() {
     const [activeStep, setActiveStep] = useState(0);
     const [idProject, setIdProject] = useState(0);
     const { tasks ,addTasksListToProject} = useContext(TaskContext);
-    const { addUsers,projects,editProject} = useContext(ProjectContext);
+    const { addUsers,projects,editProject,apiProject} = useContext(ProjectContext);
 const [users,setUsers]=useState([]);
     const [skipped, setSkipped] = useState(new Set());
     const [isEditProject, setIsEditProject] = useState(false);
@@ -83,29 +83,15 @@ setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
 }
 const createUsers=()=>{
-    let idUsers=users.map((u)=>u.id);
+    if(users.length>0){
+         let idUsers=users.map((u)=>u.id);
     addUsers(idUsers,idProject)
+    }
+   
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
 }
-const apiProject=async(_url, _method, _body = {})=>{
-    console.log(_body);
-    try {
-        let resp = await axios({
-            method: _method,
-            url: _url,
-            data: JSON.stringify(_body),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-          
-        })
-      return resp;
-    } catch (err) {
-        throw err;
-    }
-}
+
     const createProject = async () => {
         console.log(formData);
         try {
