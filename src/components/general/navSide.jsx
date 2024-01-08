@@ -21,7 +21,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext';
 import { ProjectContext } from '../../context/projectCOntext';
-import '../../style/nav.css'
+import Chat from '../chat/chat';
+
+
+
 const drawerWidth = 240;
 const Main = styled('main', {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -72,11 +75,20 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function PersistentDrawerLeft() {
   const { findUserById ,currentId} = React.useContext(UserContext);
-
+const [message,setMessage]=useState('')
   const { projects } = React.useContext(ProjectContext);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedProjectId, setSelectedProjectId] = useState(null); 
-  const [message, setMessage] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState(null); // New state
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const openChat = (user) => {
+    setSelectedUser(user);
+    setIsChatOpen(true);
+  };
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+  }; 
+
 
 const [isOpen,setIsOpen]=useState(false);
 const [now, setNow] = useState(new Date());
@@ -96,7 +108,7 @@ const [now, setNow] = useState(new Date());
   };
 
   const startChat = (user) => {
-    console.log(user);
+    console.log({user});
     setSelectedUser(user);
   };
 
@@ -210,14 +222,69 @@ const [now, setNow] = useState(new Date());
         <Divider />
        
         <ul>
-  {selectedProjectId?.users?.map((user, index) => (
+{/*   {selectedProjectId?.users?.map((user, index) => (
+    
+    
     <li key={index}>
-      <button onClick={() => startChat({ email: user.email, id: user._id })}>
+      <button onClick={() => startChat({ id: user })}>
         {handleFindById(user)?.name}:
       </button>
     </li>
-  ))}
-  {selectedUser && <Chat selectedUser={selectedUser} />}
+  ))} */}
+
+
+{selectedProjectId?.users?.map((user, index) => {
+    let userDetails = handleFindById(user);
+    
+
+    return (
+        <li key={index}>
+            <button onClick={() => openChat(userDetails)}>
+                {userDetails?.name}:
+            </button>
+        </li>
+    );
+})}
+
+{/* {selectedProjectId?.users?.map((user, index) => {
+    let userDetails = handleFindById(user);
+    
+
+    return (
+        <li key={index}>
+            <button onClick={() => startChat(userDetails)}>
+                {userDetails?.name}:
+            </button>
+        </li>
+    );
+})} */}
+    {selectedProjectId && (
+        <li>
+            {(() => {
+                let adminDetails = handleFindById(selectedProjectId?.admin);
+                return (
+                    <button onClick={() => openChat(adminDetails)}>
+                        {adminDetails?.name}:
+                    </button>
+                );
+            })()}
+        </li>
+)}
+   <li >
+      <button onClick={() => openChat({ email: selectedProjectId?.admin, id: selectedProjectId?.admin })}>
+        {handleFindById(selectedProjectId?.admin)?.name}:
+      </button>
+    </li> 
+{/*   {selectedUser && <Chat selectedUser={selectedUser} selectedProject={selectedProjectId.id}/>}
+ */}
+  {selectedUser && (
+        <Chat
+          selectedUser={selectedUser}
+          selectedProject={selectedProjectId.id}
+          isOpen={isChatOpen}
+          handleClose={closeChat}
+        />
+      )}
 </ul>
 
    

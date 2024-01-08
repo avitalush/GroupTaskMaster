@@ -28,7 +28,7 @@ const {handleforgetPassword}=React.useContext(UserContext)
             //   setIsError(true);
             //   setFlag(true);
             const resp=handleforgetPassword({email:emailClone});
-            console.log(resp);
+            alert("success!!!")
           
     }
 
