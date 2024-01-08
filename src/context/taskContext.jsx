@@ -27,7 +27,7 @@ export default function ProviderTask({ children }) {
     }
     const addTaskToList = async (data) => {
         dispach({ type: "ADD_TASK", payload: data })
-        console.log(tasks);
+        console.log(data);
     }
     const addTasksListToProject = async () => {
         
@@ -45,7 +45,7 @@ export default function ProviderTask({ children }) {
             })
             dispach({ type: "UPDATE_TASKS", payload: [] })
 
-            console.log(resp.url);
+            console.log(resp);
             return resp;
         } catch (err) {
             throw err;

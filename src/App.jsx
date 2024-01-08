@@ -14,12 +14,11 @@ import SwipeableTemporaryDrawer from './components/general/navSide'
 import { Main } from './components/general/mainSide'
 import Login from './components/users/login/logIn'
 import AddUser from './components/users/addUser'
-import { Home } from '@mui/icons-material'
 import ProviderTask from './context/taskContext'
 import DynamicSelect from './components/existingProject/navFilter/byUser'
 import NewTask from './components/general/newTask'
 import PasswordReset from './components/users/login/passwordReset'
-
+import Home from './pages/home'
 
 function App() {
 
@@ -33,6 +32,8 @@ function App() {
           <SwipeableTemporaryDrawer />
           
    <Routes> 
+   <Route path='/' element={<Home/>}></Route>
+
    <Route path='/home' element={<ShowAllProjcts/>}></Route>
    <Route path='/login' element={<Login/>}></Route>
    <Route path='/resetpassword/:token' element={<Main><PasswordReset/></Main>}></Route>

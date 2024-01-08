@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React,{useContext, useEffect,useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext';
 import { ProjectContext } from '../../context/projectCOntext';
-
+import '../../style/nav.css'
 const drawerWidth = 240;
 const Main = styled('main', {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -71,14 +71,15 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 export default function PersistentDrawerLeft() {
-  const { findUserById } = React.useContext(UserContext);
+  const { findUserById ,currentId} = React.useContext(UserContext);
 
   const { projects } = React.useContext(ProjectContext);
-
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedProjectId, setSelectedProjectId] = useState(null); // New state
+  const [selectedProjectId, setSelectedProjectId] = useState(null); 
+  const [message, setMessage] = useState("");
 
-
+const [isOpen,setIsOpen]=useState(false);
+const [now, setNow] = useState(new Date());
   const navigate = useNavigate();
   const theme = useTheme();
    const [open, setOpen] = React.useState(false);
@@ -108,34 +109,66 @@ export default function PersistentDrawerLeft() {
   };
   const handleAllProjects = () => {
     navigate(`/home`);
-   
+    handleDrawerClose(); 
 
   };
+  const handleMyProject = () => {
+    navigate(`project/000`);
+    handleDrawerClose(); 
+
+  };
+  useEffect(() => {
+    setIsOpen(projects.length > 0);
+    console.log(currentId);
+    if (now.getHours() >= 6 && now.getHours() < 12) {
+      setMessage("בוקר טוב ☀");
+  } else if (now.getHours() >= 12 && now.getHours() < 16) {
+      setMessage("צהריים טובים 🌞");
+  } else if (now.getHours() >= 16 && now.getHours() < 18) {
+      setMessage("אחר הצהריים טובים⛅ ");
+  } else {
+      setMessage("לילה טוב 😴");
+  }
+  }, [projects]);
+  
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, p: 0, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            <button onClick={() => { navigate("/register") }}>
+      <AppBar position="fixed" open={open} className="container-fluid p-0 m-0 gx-0 center" >
+        <Toolbar className="row align-items-center ">
+       
+          <Typography variant="h6" noWrap component="div" className='col-8 buttons'>
+          {isOpen===true && (
+         
+         <IconButton
+           color="inherit"
+           aria-label="open drawer"
+           onClick={handleDrawerOpen}
+           edge="start"
+           sx={{ mr: 2, p: 0, ...(open && { display: 'none' }) }}
+         >
+           <MenuIcon />
+         </IconButton>
+  
+         
+       )}
+            <button onClick={() => { navigate("/register") }}  style={{ backgroundColor: "blue" }} className="ms-md-3">
               הרשמה
             </button>
-            <button onClick={() => { navigate("/login") }}>
+            <button onClick={() => { navigate("/login") }} style={{ backgroundColor: "blue" }} className="ms-md-3">
               התחברות
             </button>
+            
+            {message}
           </Typography>
-        </Toolbar>
+          <div className="col-3 logo" type="button">
+                    <img src='/images/logo.png' height="70" width="90" onClick={() => navigate("/")} />
+                </div>
+         </Toolbar>
       </AppBar>
+    
+      
       <Drawer
         sx={{
           width: drawerWidth,
@@ -161,6 +194,11 @@ export default function PersistentDrawerLeft() {
                 <ListItemText primary={"כל הפרויקטים"} />
               </ListItemButton>
             </ListItem>
+            <ListItem >
+              <ListItemButton onClick={() => handleMyProject()}>
+                <ListItemText primary={"הפרויקט שלי"} />
+              </ListItemButton>
+            </ListItem>
           {projects?.map((project, index) => (
             <ListItem key={index}>
               <ListItemButton onClick={() => showProjectDetails(project)}>
@@ -182,15 +220,10 @@ export default function PersistentDrawerLeft() {
   {selectedUser && <Chat selectedUser={selectedUser} />}
 </ul>
 
-        {/*
-
-
-  return (
-
-        */}
+   
 
       </Drawer>
-
+     
       <Main open={open}>
         <DrawerHeader />
 

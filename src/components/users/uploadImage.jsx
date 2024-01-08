@@ -1,29 +1,25 @@
-import { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebaseconfig';
-import { v4 } from 'uuid';
+import { useContext, useState } from 'react';
+import { UserContext } from '../../context/userContext';
+
 
 
 const UpImage = ({ handleImage }) => {
   const [imageUpload, setImageUpload] = useState(null);
   const [status, setStatus] = useState(false);
-
+const {handleUpload}=useContext(UserContext)
   const uploadImage = async (e) => {
     setStatus(true)
     e.preventDefault();
     try {
       if (imageUpload === null) return;
 
-      const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-      await uploadBytes(imageRef, imageUpload);
+      const res=await handleUpload(imageUpload);
 
-      let imageUrl = null;
-      await getDownloadURL(imageRef).then((data) => {
         setStatus(false)
-        imageUrl = data;
-      });
+        
+      
 
-      handleImage(imageUrl);
+      handleImage(res);
     } catch (error) {
       console.error('Error uploading image:', error);
     }

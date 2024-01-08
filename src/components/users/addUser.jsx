@@ -14,6 +14,7 @@ import swal from 'sweetalert';
 import "./login/login.css";
 import { useForm } from "react-hook-form";
 import { UserContext } from '../../context/userContext';
+import UpImage from './uploadImage';
 
 
 const AddUser = () => {
@@ -26,6 +27,7 @@ const AddUser = () => {
         name:"",
         email:"",
         password:"",
+        pic:''
     
     })
 
@@ -37,12 +39,17 @@ const {addUser}=useContext(UserContext)
        doApi(data)
       
     };
+    const handleImage = (imageUr) => {
+console.log(imageUr);
+    setFormData((prevState) => ({ ...prevState, pic: imageUr }));
+    };
 
     const doApi = async (_data) => {
         try {
             
         const resp = await addUser( formData);
-if(resp.status==="201"){
+        console.log(resp.status);
+if(resp.status===201){
 
     navigate('/login')
 }
@@ -51,7 +58,7 @@ if(resp.status==="201"){
         catch (err) {
             console.log(err);
             swal({
-                title: "כתובת המייל או הסיסמא שגויים!",
+                title: "ההרשמה נכשלה-נסה שוב!",
                 icon: "warning",
                 button: "אישור",
             });
@@ -92,13 +99,8 @@ if(resp.status==="201"){
                     variant="outlined" 
                     style={{ backgroundColor: "red" }} />
 
-<TextField id="standard-basic"
-                    label="תמונה"
-                    name="pic"
-                    
-                    className='w-75 mb-5'
-                    variant="outlined" 
-                    style={{ backgroundColor: "red" }} />
+
+                       <UpImage handleImage={handleImage}  className='w-75 mb-5' />
 
                 <div>
                     <Button variant="contained"
