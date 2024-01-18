@@ -1,0 +1,57 @@
+.text-burgundy {
+    color: #d1bbac 
+}
+.border-rudius{
+    border-radius: 50%;
+}
+.text-burgundy2 {
+    color: #f5f0ed
+}
+.text-burgundy3 {
+    color: rgb(82, 56, 26) 
+}
+.text-black {
+    color: black 
+}
+.border-Style{
+  border: 1px solid #f5f0ed 
+}
+.border-Style2{
+  border: 1px solid #d1bbac 
+}
+
+.background-color{
+    background: #f5f0ed
+}
+.background-color2{
+    background: #d1bbac
+}
+
+  .kalam-light {
+    font-family: "Kalam", cursive;
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  .kalam-bold {
+    font-family: "Kalam", cursive;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .big-text {
+    font-size: 1em;
+}
+
+/* קבוצת זוהר מסביב לכיתוב */
+.glowing-text {
+    text-shadow: 0 0 10px rgba(130, 119, 81, 0.8);
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5; /* ניתן לשנות את האטימות כרצונך */
+  }

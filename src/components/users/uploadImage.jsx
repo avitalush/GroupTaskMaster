@@ -37,7 +37,8 @@ const {handleUpload}=useContext(UserContext)
         <div class="spinner-border text-info fs-1" role="status">
         </div>
       }
-      <button className="btn btn-secondary btn-lg btn-block text-info" onClick={uploadImage}>Upload Image</button>
+      <button className="btn btn-secondary btn-lg btn-block my-3" onClick={uploadImage} style={{ background: "#d1bbac" }}
+>Upload Image</button>
     </div>
   );
 };

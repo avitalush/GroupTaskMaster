@@ -85,11 +85,11 @@ const apiLogIn=async(_url, _method, _body = {})=>{
         setFormData((prevState) => ({ ...prevState, [name]: value }));
       }
     return (
-        <div className='container center '>
+        <div className='container center my-4 text-burgundy background-color'>
 <form onSubmit={handleSubmit(onSubmit)} className="form mx-auto pt-5">
-                    <h2 className='mb-4'>היי, טוב לראות אותך</h2>
+                    <h2 className='mb-4'>Hey! good to see you</h2>
                 <TextField id="standard-basic"
-                    label="אימייל"
+                    label="email"
                     name="email"
                     className='w-75'
                     variant="outlined" 
@@ -99,7 +99,7 @@ const apiLogIn=async(_url, _method, _body = {})=>{
                 <p className='text-danger'>{errors.email?.message}</p>
 
                 <FormControl sx={{ m: 1 }} variant="standard" className='w-75'>
-                    <InputLabel htmlFor="outlined-adornment-password">סיסמא</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-password">password</InputLabel>
                     <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
@@ -121,16 +121,16 @@ const apiLogIn=async(_url, _method, _body = {})=>{
 
                 <div>
                     <Button variant="contained"
-                        style={{ background: "red" }}
+                        style={{ background: "#d1bbac" }}
                         size="medium" type="submit"
                         onClick={handleSubmit}
-                    >  התחבר  </Button>
+                    >  Sign in  </Button>
 
                     <Divider className='w-30 text-dark my-3' />
-                    <p className="move" onClick={openReset} style={{cursor:"pointer"}}>שכחתי סיסמא</p>
+                    <p className="move" onClick={openReset} style={{cursor:"pointer"}}>Forgot Password</p>
 
                     {open ? <ForgetPassword email={mail} setOpen={setOpen} /> : null}
-                    <p className="move link" onClick={() => { navigate("/register"); }} style={{cursor:"pointer"}}> לא רשום? עבור להרשמה </p>
+                    <p className="move link" onClick={() => { navigate("/register"); }} style={{cursor:"pointer"}}> Unregistered? Go to registration</p>
                 </div>
             </form>
         </div>

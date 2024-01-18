@@ -25,13 +25,13 @@ const FilterNav = ({ onFilterChange, categories, users, projects }) => {
   const inputStyle = {
     width: '100%',
     padding: '8px',
-    border: '1px solid #d9d9d9',
+    border: '1px solid black',
     borderRadius: '4px',
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
   };
 
   return (
-    <Container style={{ maxWidth: '1200px' }}>
+    <Container style={{ maxWidth: '1200px'  }} className=''>
       <Grid container direction="row" justifyContent="flex-start"  spacing={1}>
         <Grid item style={commonGridStyle}>
           <Input
