@@ -1,5 +1,6 @@
 import React,{useContext, useEffect,useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import '../../style/generalStyle.css'
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,6 +23,18 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/userContext';
 import { ProjectContext } from '../../context/projectCOntext';
 import Chat from '../chat/chat';
+import { Container, Row, Col, Image } from 'react-bootstrap';
+
+
+/*
+import React from 'react';
+import { Box, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, CssBaseline } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Main from './Main';
+*/
 
 
 
@@ -133,27 +146,27 @@ const [now, setNow] = useState(new Date());
     setIsOpen(projects.length > 0);
     console.log(currentId);
     if (now.getHours() >= 6 && now.getHours() < 12) {
-      setMessage("בוקר טוב ☀");
+      setMessage("Good morning ☀");
   } else if (now.getHours() >= 12 && now.getHours() < 16) {
-      setMessage("צהריים טובים 🌞");
+      setMessage("Good afternoon🌞");
   } else if (now.getHours() >= 16 && now.getHours() < 18) {
-      setMessage("אחר הצהריים טובים⛅ ");
+      setMessage("Good afternoon⛅ ");
   } else {
-      setMessage("לילה טוב 😴");
+      setMessage("Good night😴");
   }
   }, [projects]);
   
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }} className="text-burgundy background-color p-0 m-0" >
       <CssBaseline />
-      <AppBar position="fixed" open={open} className="container-fluid p-0 m-0 gx-0 center" >
-        <Toolbar className="row align-items-center ">
+      <AppBar position="fixed" open={open} className="container-fluid p-0 m-0 gx-0 center " >
+        <Toolbar className="row align-items-center background-color2 " sx={{ height: '100%' }}>
        
-          <Typography variant="h6" noWrap component="div" className='col-8 buttons'>
+          <Typography variant="h6" noWrap component="div" className='col-8 buttons text-burgundy2' >
           {isOpen===true && (
          
-         <IconButton
+         <IconButton 
            color="inherit"
            aria-label="open drawer"
            onClick={handleDrawerOpen}
@@ -165,23 +178,25 @@ const [now, setNow] = useState(new Date());
   
          
        )}
-            <button onClick={() => { navigate("/register") }}  style={{ backgroundColor: "blue" }} className="ms-md-3">
-              הרשמה
+            <button onClick={() => { navigate("/register") }}   className="ms-md-3 text-burgundy2 background-color2 border-Style kalam-light">
+              Sign up
             </button>
-            <button onClick={() => { navigate("/login") }} style={{ backgroundColor: "blue" }} className="ms-md-3">
-              התחברות
+            <button onClick={() => { navigate("/login") }} className="ms-md-3 text-burgundy2 background-color2 border-Style kalam-light me-3">
+              Sign in
             </button>
             
-            {message}
+              {message}
+            
+            
           </Typography>
           <div className="col-3 logo" type="button">
-                    <img src='/images/logo.png' height="70" width="90" onClick={() => navigate("/")} />
+                    <img src='../../images/TASK.png'  height="70" width="90" onClick={() => navigate("/")}  className='border-rudius'/>
                 </div>
          </Toolbar>
       </AppBar>
     
       
-      <Drawer
+      <Drawer 
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -194,34 +209,34 @@ const [now, setNow] = useState(new Date());
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader >
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rlt' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-        <ListItem >
+        <ListItem className='kalam-light text-burgundy'>
               <ListItemButton onClick={() => handleAllProjects()}>
-                <ListItemText primary={"כל הפרויקטים"} />
+                <ListItemText primary={"all projects"} className='kalam-bold text-burgundy'/>
               </ListItemButton>
             </ListItem>
             <ListItem >
               <ListItemButton onClick={() => handleMyProject()}>
-                <ListItemText primary={"הפרויקט שלי"} />
+                <ListItemText primary={"my project"} className='kalam-bold text-burgundy'/>
               </ListItemButton>
             </ListItem>
           {projects?.map((project, index) => (
             <ListItem key={index}>
               <ListItemButton onClick={() => showProjectDetails(project)}>
-                <ListItemText primary={project.name} />
+                <ListItemText primary={project.name}  className='kalam-bold text-burgundy'/>
               </ListItemButton>
             </ListItem>
           ))}
         </List>
         <Divider />
        
-        <ul>
+        <ul className='kalam-bold text-burgundy'>
 {/*   {selectedProjectId?.users?.map((user, index) => (
     
     
@@ -238,7 +253,7 @@ const [now, setNow] = useState(new Date());
     
 
     return (
-        <li key={index}>
+        <li key={index} className='kalam-bold text-burgundy'>
             <button onClick={() => openChat(userDetails)}>
                 {userDetails?.name}:
             </button>
@@ -259,11 +274,11 @@ const [now, setNow] = useState(new Date());
     );
 })} */}
     {selectedProjectId && (
-        <li>
+        <li className='kalam-bold text-burgundy'>
             {(() => {
                 let adminDetails = handleFindById(selectedProjectId?.admin);
                 return (
-                    <button onClick={() => openChat(adminDetails)}>
+                    <button onClick={() => openChat(adminDetails)} className='kalam-bold text-burgundy'>
                         {adminDetails?.name}:
                     </button>
                 );
@@ -271,7 +286,7 @@ const [now, setNow] = useState(new Date());
         </li>
 )}
    <li >
-      <button onClick={() => openChat({ email: selectedProjectId?.admin, id: selectedProjectId?.admin })}>
+      <button onClick={() => openChat({ email: selectedProjectId?.admin, id: selectedProjectId?.admin })} className='kalam-bold text-burgundy'>
         {handleFindById(selectedProjectId?.admin)?.name}:
       </button>
     </li> 
@@ -283,6 +298,7 @@ const [now, setNow] = useState(new Date());
           selectedProject={selectedProjectId.id}
           isOpen={isChatOpen}
           handleClose={closeChat}
+          className='kalam-bold text-burgundy'
         />
       )}
 </ul>

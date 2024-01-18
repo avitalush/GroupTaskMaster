@@ -15,6 +15,7 @@ import "./login/login.css";
 import { useForm } from "react-hook-form";
 import { UserContext } from '../../context/userContext';
 import UpImage from './uploadImage';
+import '../../style/generalStyle.css'
 
 
 const AddUser = () => {
@@ -73,40 +74,44 @@ if(resp.status===201){
         setFormData((prevState) => ({ ...prevState, [name]: value }));
       }
     return (
-        <div className='container center p-2'>
+        <div className='container center p-2 text-burgundy '>
             <form onSubmit={handleSubmit(onSubmit)} className="form mx-auto pt-5">
-                <h2 className='mb-4'>הרשמה</h2>
+                <h2 className='mb-4'>Sign up</h2>
                 <TextField id="standard-basic"
-                    label="שם"
+                    label="name"
                     name="name"
-                    className='w-75 mb-3'
+                    className='w-75 mb-3 text-burgundy'
                     variant="outlined" 
                     onChange={handleChangeValue}
-                    style={{ backgroundColor: "red" }} />
+                    style={{ backgroundColor: "#ebedf0" }}
+                     />
                     
    <TextField id="standard-basic"
-                    label="אמייל"
+                    label="email"
                     name="email"
                     onChange={handleChangeValue}
-                    className='w-75 mb-3'
+                    className='w-75 mb-3 text-burgundy kalam-light'
                     variant="outlined" 
-                    style={{ backgroundColor: "red" }} />
-                       <TextField id="standard-basic"
-                    label="ססימא"
+                    style={{ backgroundColor: "#ebedf0" }}
+                    />
+                       <TextField id="standard-basic kalam-light"
+                    label="password"
                     name="password"
                     onChange={handleChangeValue}
-                    className='w-75 mb-3'
+                    className='w-75 mb-3  kalam-light'
                     variant="outlined" 
-                    style={{ backgroundColor: "red" }} />
+                    style={{ backgroundColor: "#ebedf0" }}
+                     />
 
 
-                       <UpImage handleImage={handleImage}  className='w-75 mb-5' />
+                       <UpImage handleImage={handleImage}  className='w-75 mb-5 text-burgundy' />
 
                 <div>
-                    <Button variant="contained"
-                        style={{ background: "red" }}
+                    <Button variant="contained" className='text-burgundy mt-2'
                         size="medium" type="submit"
-                    >  התחבר  </Button>
+                        style={{ background: "#d1bbac" }}
+
+                    >  Sign up  </Button>
 
                 </div>
             </form>

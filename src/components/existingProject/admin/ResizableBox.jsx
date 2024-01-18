@@ -4,7 +4,7 @@ import "react-resizable/css/styles.css";
 
 const ResizableBox = ({ children, width = 600, height = 300, resizable = true, style = {}, className = "" }) => {
   return (
-    <div style={{ marginLeft: 20 }}>
+    <div style={{ marginLeft: 20 }} className="kalam-light">
       <div
         style={{
           display: "inline-block",

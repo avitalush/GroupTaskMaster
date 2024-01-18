@@ -28,7 +28,7 @@ const fetchData=async()=>{
     
 
     return (
-        <div id="main" className="d-flex flex-wrap">
+        <div id="main" className="d-flex flex-wrap background-color kalam-light center">
 
             {projects?.map((project) => (
                 <SingleProject key={project.id} project={project} />

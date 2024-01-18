@@ -14,13 +14,13 @@ export default function MyProject() {
     <Card
     onClick={handleClick}
    style={{
-     boxShadow: `30px -10px 5px 3px greenyellow`,
+     boxShadow: `3px -5px 3px 3px #d1bbac`,
      position: 'relative',
      cursor:"pointer"
    }}
    id="cardcss"
  >
-   <Card.Body style={{ textAlign: 'center' }}>
+   <Card.Body style={{ textAlign: 'center' }} className='kalam-light'>
      <Card.Title >
        MY PROJECT
      </Card.Title>
