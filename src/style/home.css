@@ -24,7 +24,7 @@ body {
   .right-side {
     width: 50%;
     height: 100%;
-    background-color: black; /* רקע שחור */
+    background-color: black; רקע שחור
     display: flex;
     align-items: center;
     justify-content: center;

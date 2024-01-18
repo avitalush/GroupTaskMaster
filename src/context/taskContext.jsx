@@ -94,18 +94,20 @@ export default function ProviderTask({ children }) {
             let resp = await axios({
                 method: "post",
                 url: `${BASE_URL}/addNote?taskId=${id}`,
-                data: note,
+                data: { note: note },
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
-            })
-            console.log(resp);
+            });
+            console.log(resp);  // הוסף הדפסה כדי לראות את התגובה בקונסול
             return resp;
         } catch (err) {
+            console.error(err);  // הוסף הדפסה של שגיאה בקונסול
             throw err;
         }
     }
+    
     const editTask = async (data) => {
         console.log(data);
         try {

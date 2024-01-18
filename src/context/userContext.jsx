@@ -20,6 +20,12 @@ const [currentId,setCurrentId]=useState(0);
                 }
             })
             setCurrentId(_body.email);
+            let ccc= _body.email;
+            if(ccc!==undefined){
+                            localStorage.setItem("emailUser",ccc);
+
+            }
+
              return resp;
         } catch (err) {
             throw err;
@@ -27,7 +33,7 @@ const [currentId,setCurrentId]=useState(0);
     };
 
     const getAllUsersFromServer = async () => {
-
+       
         try {
             let resp = await axios({
                 method: "get",
@@ -37,7 +43,14 @@ const [currentId,setCurrentId]=useState(0);
 
                 }
             }) 
-            updateUserId(resp.data.users);
+            console.log(localStorage.getItem("emailUser"),"---")
+            let c=resp.data.users.find((u)=>u.email===localStorage.getItem("emailUser"));
+          
+            localStorage.setItem("idUser", c.id);
+            localStorage.setItem("nameUser", c.name);
+            localStorage.setItem("passwordUser", c.password);
+            ///localStorage.setItem("emailUser", c.e);
+         updateUserId(resp.data.users);
           
             dispach({ type: "UPDATE_USERS", payload: resp.data.users })
           
@@ -58,8 +71,14 @@ const [currentId,setCurrentId]=useState(0);
       return c;
     }
     const updateUserId=(data)=>{
-      let c=data.find((u)=>u.email===currentId);
-      console.log(c);
+        console.log(localStorage.getItem("emailUser"),"---")
+
+      let c=data.find((u)=>u.email===localStorage.getItem("emailUser"));
+      
+      localStorage.setItem("idUser", c.id);
+      localStorage.setItem("nameUser", c.name);
+      localStorage.setItem("passwordUser", c.password);
+      //localStorage.setItem("emailUser", c.e);
       setCurrentId(c)
     }
     const getAllTasksByIdUser=async()=>{
@@ -72,7 +91,7 @@ const [currentId,setCurrentId]=useState(0);
     
                 }
             })
-          console.log(resp); 
+          console.log({resp}); 
           return resp;
         } catch (err) {
             throw err;

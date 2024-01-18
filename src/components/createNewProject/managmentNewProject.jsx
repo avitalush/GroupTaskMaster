@@ -93,11 +93,9 @@ const createUsers=()=>{
 }
 
     const createProject = async () => {
-        console.log(formData);
         try {
             const url = "http://localhost:1200/api/v1/projects/createProject";
              const { data } = await apiProject(url, "POST",formData);
-          
             setIdProject(data.project.id);
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
           

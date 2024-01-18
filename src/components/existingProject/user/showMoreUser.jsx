@@ -3,7 +3,8 @@ import { Card, Form, Button, ListGroup, Badge } from 'react-bootstrap';
 import { UserContext } from '../../../context/userContext';
 import {  Avatar } from "antd";
 import { TaskContext } from '../../../context/taskContext';
-import { Select } from 'antd';
+import { Select, Space } from 'antd';
+import './style.css'
 const { Option } = Select;
 const TaskDetails = ({ task ,project,isAdmin,updateFormData,formData }) => {
     const [note, setnote] = useState('');
@@ -11,7 +12,7 @@ const TaskDetails = ({ task ,project,isAdmin,updateFormData,formData }) => {
   const { findUserById,usersList,currentId} = useContext(UserContext);
   const { addNote,editTask} = useContext(TaskContext);
 const [users,setUsers]=useState([isAdmin?project.users:currentId.id])  
-let idUser=0;
+
 const handlenotesubmit = (e) => {
   e.preventDefault();
   if (note.trim() !== '') {
@@ -30,11 +31,16 @@ const handlenotesubmit = (e) => {
   }
 };
 
-  
+  const getUserById=(id)=>{
+   let res= findUserById(id);
+ 
+   return res?.email
+
+  }
   useEffect(() => {
     console.log(isAdmin);
     let c=findUserById(task.id);
-    console.log(project);
+    console.log({task});
 
   }, []); 
 
@@ -59,7 +65,7 @@ onChange={(e) => updateFormData({ ...formData, date_created: e.target.value })}/
 
         </Form.Group>
 
-  
+{/*   
         <Form.Group className="mb-3">
   <Form.Label>Assignees</Form.Label>
   <div style={{ position: "relative" }}>
@@ -95,29 +101,54 @@ onChange={(e) => updateFormData({ ...formData, date_created: e.target.value })}/
 
      )}
   </div>
-</Form.Group>
+</Form.Group> */}
 
-
-<Form.Group className="mb-3">
-  <Form.Label>Categories</Form.Label>
+  
+        <Form.Group className="mb-3">
+  <Form.Label>Assignees</Form.Label>
   <div style={{ position: "relative" }}>
-    <Select
-       disabled={!isAdmin}
-      mode="multiple"
-      style={{ width: '100%' }}
-      placeholder="Select Categories"
-      value={formData.categories}  // Make sure formData.categories is an array
-      onChange={(selectedCategories) => updateFormData({ ...formData, categories: selectedCategories })}
+    {project.permissiontoAssociateTasks?(
+
+   
+    <select
+      disabled={!isAdmin}
+      class="form-select" aria-label="Default select example"
+      placeholder="Select Assignees"
+      value={formData.user}
+      onChange={(value) => updateFormData({ ...formData, user: value.target.value })}
     >
-      {project?.categories?.map((category, index) => (
-        <Option key={index} value={category} readOnly={!isAdmin}>
-          {category}
-        </Option>
+      {project?.users?.map((user, index) => (
+          <option value={user}>{getUserById(user)}</option>
       ))}
-    </Select>
+    </select>
+     ):(
+<select
+       class="form-select" aria-label="Default select example"
+
+  placeholder="Select Assignees"
+  value={formData.user}
+  onChange={(value) => updateFormData({ ...formData, user: value.target.value })}
+>
+  {(project?.users || []).map((user, index) => (
+    <option key={index} value={user}>
+      {getUserById(user)}-{user}
+    </option>
+  ))}
+</select>
+
+     )}
   </div>
 </Form.Group>
 
+<select class="form-select" aria-label="Default select example">
+
+  <option selected>select category</option>
+  {project?.categories?.map((user, index) => (
+     <option value={index}>{user}</option>
+    
+  ))}
+ 
+</select>
         <Form.Group className="mb-3">
           <Form.Label>notes</Form.Label>
           <ListGroup>
