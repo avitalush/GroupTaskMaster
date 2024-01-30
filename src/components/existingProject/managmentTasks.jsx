@@ -29,10 +29,12 @@ const colors = {
   danger: '#e74c3c',
   lightGray: '#ebe6e6',
   darkGray: '#ada2a2',
-  red: '#f00909',
-  green: '#2ecc71',
-  blue: '#3498db',
-  yellow: '#f39c12',
+  red: '#d1acb0',
+  green: '#acd1ce',
+  blue: '#acb0d1',
+  yellow: '#d1ceac',
+  pink:'#f996a0', 
+
 };
 
 const customStyles = {
@@ -49,6 +51,7 @@ const customStyles = {
     maxWidth: '60%',
     maxHeight: '80vh',
     overflowY: 'auto',
+    
   },
 };
 
@@ -64,12 +67,12 @@ const classes = {
     display: "flex",
     margin: "0 auto",
     width: "90vw",
-    fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+    //fontFamily: 'Arial, "Helvetica Neue", sans-serif',
 
   },
   column: {
     borderRadius: "2.5px",
-    width: "300px",
+    width: "50%",
     height: "475px",
     overflowY: "scroll",
     msOverflowStyle: "none",
@@ -244,20 +247,20 @@ const [refresh,setRefresh]=useState(false);
 
     setFilteredTasks(filtered);
   };
-
   return (
-    <DndProvider backend={HTML5Backend} style={{ backgroundColor: "black" }}>
+    <DndProvider backend={HTML5Backend} className='text-burgundy2 center background-color2'>
       {isAdmin && <ChartComponent data={graphData} />}
-      <h1 style={{ textAlign: 'center', color: colors.darkGray }}>Kanban Board</h1>
-      <h2 style={{ textAlign: 'center', color: colors.darkGray }}>{project.name}</h2>
+    
+      <h1 style={{ textAlign: 'center', }} className='text-black kalam-bold'>{project.name}</h1>
+      <h3 style={{ textAlign: 'center', }} className='text-black kalam-light'>{project.description}</h3>
       <FilterNav onFilterChange={handleFilterChange} categories={project.categories} users={project.users} projects={project.id === "000" ? projects : []} />
-      <section style={classes.board}>
+      <section style={classes.board} className="kalam-bold my-4">
         {labels.map((channel, index) => (
           <KanbanColumn key={channel} status={channel} tasks={start ? tasks : filteredTasks} updateTask={updateTask} PROJECT={project} isAdmin={isAdmin} colors={colors} index={index} setRefresh={setRefresh}/>
         ))}
       </section>
       {isAdmin &&
-        <Button style={classes.button} onClick={handleAddTask} variant="primary">Add Task</Button>
+        <Button  onClick={handleAddTask} variant="primary" className=' kalam-bold text-black border-Style2 background-color my-3'>Add Task</Button>
       }
     </DndProvider>
   );
@@ -324,24 +327,24 @@ setRefresh(true)
     ? {
       ...classes.column,
       borderColor: colors.darkGray,
-      background: 'linear-gradient(3deg, rgba(0,0,0,1) 9%, rgba(52,152,219,1) 70%, rgba(185,234,255,1) 100%)',
+      background: 'linear-gradient(3deg, rgba(0,0,0,1) 9%, rgba(172, 176, 209,1) 70%, rgba(185,234,255,1) 100%)',
     }
     : index === 1
       ? {
         ...classes.column,
         borderColor: colors.darkGray,
-        background: 'linear-gradient(36deg, rgba(0,0,0,1) 9%, rgba(46,204,113,1) 70%, rgba(255,252,252,1) 100%)',
+        background: 'linear-gradient(36deg, rgba(0,0,0,1) 9%, rgba(209, 206, 172,1) 70%, rgba(255,252,252,1) 100%)',
       }
       : index === 2
         ? {
           ...classes.column,
           borderColor: colors.darkGray,
-          background: 'linear-gradient(5deg, rgba(0,0,0,1) 9%, rgba(240,9,9,1) 70%, rgba(255,255,255,1) 100%)',
+          background: 'linear-gradient(5deg, rgba(0,0,0,1) 9%, rgba(172, 209, 206,1) 70%, rgba(255,255,255,1) 100%)',
         }
         : {
           ...classes.column,
           borderColor: colors.darkGray,
-          background: 'linear-gradient(5deg, rgba(0,0,0,1) 9%, rgba(173,162,162,1) 70%, rgba(255,255,255,1) 100%)',
+          background: 'linear-gradient(5deg, rgba(0,0,0,1) 9%, rgba(209, 172, 176, 1) 70%, rgba(255,255,255,1) 100%)',
         };
 const fetchDynamicPic=(id)=>{
   let res= findUserById(id);
@@ -352,7 +355,7 @@ const fetchDynamicPic=(id)=>{
 
   return (
     <div ref={drop} style={columnStyle}>
-      <div style={{ ...classes.columnHead, backgroundColor: index === 0 ? colors.blue : index === 1 ? colors.green : index === 2 ? colors.red : colors.darkGray }}>{labelsMap[status]}</div>      <div>
+      <div style={{ ...classes.columnHead, backgroundColor: index === 0 ? colors.blue : index === 1 ? colors.yellow : index === 2 ? colors.green : colors.red }}>{labelsMap[status]}</div>      <div>
         {tasks && Array.isArray(tasks) && tasks
           .filter((item) => item.status === status)
           .map((item) => (
@@ -410,7 +413,7 @@ function KanbanItem({ id, children }) {
   });
 
   return (
-    <div ref={drag} style={{ ...classes.item, opacity: isDragging ? 0.5 : 1, ...classes.container }}>
+    <div ref={drag} style={{ ...classes.item, opacity: isDragging ? 0.5 : 1, ...classes.container }} className="kalam-light">
       {children}
     </div>
 

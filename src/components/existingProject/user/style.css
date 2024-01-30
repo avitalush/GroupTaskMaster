@@ -1,0 +1,6 @@
+/* TaskDetails.css (שימי לך שם של קובץ ה-css) */
+.task-details-container {
+    max-height: 50vh;  /* גובה מרבי של 50% מהחלון הניכר (viewport) */
+    overflow-y: auto;  /* הפעלת גלילה אופקית במקרה שהתוכן חורג מהגובה המרבי */
+  }
+  

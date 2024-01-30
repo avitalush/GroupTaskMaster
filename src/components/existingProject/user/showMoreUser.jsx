@@ -45,8 +45,8 @@ const handlenotesubmit = (e) => {
   }, []); 
 
   return (
-    <Card>
-      <Card.Header>
+<Card style={{ maxHeight: "70vh", overflowY: "auto", margin: "auto", marginTop: "50px" }}>
+        <Card.Header>
         <h4>{task?.title}</h4>
       </Card.Header>
       <Card.Body>

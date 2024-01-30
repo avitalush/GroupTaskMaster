@@ -16,7 +16,6 @@ const [currentId,setCurrentId]=useState(0);
                 data: JSON.stringify(_body),
                 headers: {
                     'Content-Type': 'application/json',
-
                 }
             })
             setCurrentId(_body.email);

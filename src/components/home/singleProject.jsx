@@ -28,19 +28,22 @@ const handleEdit=()=>{
 }
 
   return (
-    <Card
+    <Card  
       style={{
-        boxShadow: `30px -10px 5px 3px ${project.color}`,
+        boxShadow: `3px -5px 3px 3px #d1bbac`,
         position: 'relative',
       }}
-      id="cardcss"
+      id="cardcss" 
     >
-      <Card.Body style={{ textAlign: 'center' }}>
+
+      {/* ${project.color} */}
+      <Card.Body style={{ textAlign: 'center' }} className='kalam-light '>
         <Card.Title style={{ fontSize: '1.5em', marginBottom: '10px' }}>
           {project.name}
         </Card.Title>
         <Card.Text style={{ fontSize: '1.2em', marginBottom: '20px' }}>
           Participants: {participantsCount}
+          <p style={{ background:`${project.color}` }} className='kalam-bold'>color: {project.color}</p>
         </Card.Text>
         <div
           style={{

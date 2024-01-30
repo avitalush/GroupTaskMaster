@@ -81,15 +81,15 @@ const { users, currentId,updateUserId } = useContext(UserContext);//קבלת מ�
     return (
 
         <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>צ'אט עם {nameReceiver}</DialogTitle>
+        <DialogTitle>chat with {nameReceiver}</DialogTitle>
         <DialogContent>
           {chatHistory.map((msg, index) => (
-            <div key={index} style={{ color: msg.sender === currentUser ? 'blue' : 'gray' }}>
+            <div key={index} style={{ color: msg.sender === currentUser ? '#6b00b6' : 'gray' }}>
               <strong>{msg.sender === currentUser ? 'you' : nameReceiver}:</strong> {msg.content}
             </div>
           ))}
           {messages.map((msg, index) => (
-            <div key={index} style={{ color: msg.sender === currentUser ? 'blue' : 'gray' }}>
+            <div key={index} style={{ color: msg.sender === currentUser ? '#6b00b6' : 'gray' }}>
               <strong>{msg.sender === currentUser ? 'you' : nameReceiver}:</strong> {msg.message}
             </div>
           ))}

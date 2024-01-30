@@ -69,8 +69,8 @@ const [formData,setFormData]=useState({
       }
     return (
         <div className='container center '>
-<form onSubmit={handleSubmit(onSubmit)} className="form mx-auto pt-5">
-                    <h2 className='mb-4'> הוסף משימה</h2>
+<form onSubmit={handleSubmit(onSubmit)} className="form mx-auto pt-5 text-burgundy kalam-bold">
+                    <h2 className='mb-4'> Add a task</h2>
                 <TextField id="standard-basic"
                     label="title"
                     name="title"
@@ -89,11 +89,11 @@ const [formData,setFormData]=useState({
                 
 
                 <div>
-                    <Button variant="contained"
-                        style={{ background: "red" }}
+                    <Button variant="contained" className='my-3'
+                        style={{ background: "#d1bbac" }}
                         size="medium" type="submit"
                         onClick={handleSubmit}
-                    >  צור  </Button>
+                    >  create  </Button>
 
                    
                 </div>

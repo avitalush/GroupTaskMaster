@@ -17,14 +17,14 @@ navigate('/newproject')
     <Card
     onClick={handleClick}
    style={{
-     boxShadow: `30px -10px 5px 3px white`,
+     boxShadow: `3px -5px 5px 3px #d1bbac`,
      position: 'relative',
      cursor:"pointer"
    }}
    id="cardcss"
  >
    <Card.Body style={{ textAlign: 'center' }}>
-     <Card.Title >
+     <Card.Title  className='kalam-light'>
        CREATE NEW PROJECT
      </Card.Title>
    </Card.Body>
