@@ -83,6 +83,13 @@ const addUsers=async(users,projectId)=>{
 
             }
         })
+        projects.forEach(element => {
+            if(element.id===projectId){
+                element.users=users;
+              
+            }
+        });
+        
       return resp;
     } catch (err) {
         throw err;

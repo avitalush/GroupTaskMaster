@@ -218,18 +218,18 @@ const [now, setNow] = useState(new Date());
         <List>
         <ListItem className='kalam-light text-burgundy'>
               <ListItemButton onClick={() => handleAllProjects()}>
-                <ListItemText primary={"all projects"} className='kalam-bold text-burgundy'/>
+                <ListItemText primary={"all projects"} className='kalam-bold ' style={{color:"#cc8686"}}/>
               </ListItemButton>
             </ListItem>
             <ListItem >
               <ListItemButton onClick={() => handleMyProject()}>
-                <ListItemText primary={"my project"} className='kalam-bold text-burgundy'/>
+                <ListItemText primary={"my project"} className='kalam-bold ' style={{color:"#cc8686"}}/>
               </ListItemButton>
             </ListItem>
           {projects?.map((project, index) => (
             <ListItem key={index}>
               <ListItemButton onClick={() => showProjectDetails(project)}>
-                <ListItemText primary={project.name}  className='kalam-bold text-burgundy'/>
+                <ListItemText primary={project.name}  className='kalam-bold ' style={{color:"#cc8686"}}/>
               </ListItemButton>
             </ListItem>
           ))}
@@ -273,18 +273,7 @@ const [now, setNow] = useState(new Date());
         </li>
     );
 })} */}
-    {selectedProjectId && (
-        <li className='kalam-bold text-burgundy'>
-            {(() => {
-                let adminDetails = handleFindById(selectedProjectId?.admin);
-                return (
-                    <button onClick={() => openChat(adminDetails)} className='kalam-bold text-burgundy'>
-                        {adminDetails?.name}:
-                    </button>
-                );
-            })()}
-        </li>
-)}
+
    <li >
       <button onClick={() => openChat({ email: selectedProjectId?.admin, id: selectedProjectId?.admin })} className='kalam-bold text-burgundy'>
         {handleFindById(selectedProjectId?.admin)?.name}:

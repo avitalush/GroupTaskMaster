@@ -18,7 +18,9 @@
   #completedTodos {
     background-color: #c2f0c2;
   }
-  
+  .ant-select-multiple-selector {
+    height: auto !important;
+  }
   div {
     margin-bottom: 10px;
     padding: 10px;

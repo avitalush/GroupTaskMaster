@@ -135,12 +135,13 @@ function Kanban() {
   const [tasks, setTasks] = useState([
   ]);
   const [filteredTasks, setFilteredTasks] = useState(tasks);
+const [refresh,setRefresh]=useState(false);
   const { index } = useParams();
   const [start, setStart] = useState(false)
   useEffect(() => {
     console.log({ currentId, project });
-    //  console.log(index!=="000"&&currentId?.id === project?.admin)
-    if (index !== "000" && currentId?._id === project?.admin) {
+    // if (index !== "000" && currentId?._id === project?.admin) {
+      if (index !== "000" && localStorage.getItem("idUser") === project?.admin) {
       setIsAdmin(true);
     }
   }, [currentId, project, index]);
@@ -150,7 +151,8 @@ function Kanban() {
   const updateTask = (id, status) => {
     console.log(status);
     let t = tasks.find((t) => t.id === id);
-    if (t.user === currentId.id || isAdmin) {
+    // if (t.user === currentId.id || isAdmin) {
+      if (t.user ===  localStorage.getItem("idUser") || isAdmin) {
       const updatedTasks = filteredTasks?.map((task) =>
         task._id === id ? { ...task, status } : task
       );
@@ -166,7 +168,7 @@ function Kanban() {
   const fetchData = async () => {
     if (index === "000") {
       const d = await getAllTasksByIdUser();
-      console.log(d);
+      console.log({d});
 
       const uniqueCategories = Array.from(
         new Set(
@@ -186,7 +188,8 @@ function Kanban() {
         description: "ALL MY TASKS",
         date_created: new Date(),
         id: "000",
-        admin: currentId.id,
+        // admin: currentId.id,
+        admin:  localStorage.getItem("idUser"),
         color: "yellow",
         permissiontoAssociateTasks: "tasks"
       })
@@ -194,6 +197,8 @@ function Kanban() {
     else {
       const { data } = await getTasksByIdProject(index);
       console.log(data.tasks[0]);
+      setRefresh(false)
+      console.log(refresh);
       setTasks(data.tasks);
       setFilteredTasks(data.tasks)
       let current = getProjectById(index);
@@ -213,12 +218,19 @@ function Kanban() {
 
       }
     })();
-  }, [isAdmin])
+  }, [isAdmin,refresh])
   useEffect(() => {
     fetchData();
+    (async () => {
+      if (isAdmin) {
+        const { data } = await getDatatToGraph(index);
+        console.log(data);
+        setGraphData(data.objectsArray)
 
+      }
+    })();
     setStart(true)
-  }, [index]);
+  }, [index,refresh]);
   const handleAddTask = () => {
     navigate(`/newtask/${project.id}`)
   }
@@ -235,16 +247,16 @@ function Kanban() {
 
     setFilteredTasks(filtered);
   };
- 
   return (
     <DndProvider backend={HTML5Backend} className='text-burgundy2 center background-color2'>
       {isAdmin && <ChartComponent data={graphData} />}
-      <h1 style={{ textAlign: 'center', }} className='text-black kalam-light'>Kanban Board</h1>
-      <h2 style={{ textAlign: 'center', }} className='text-black kalam-bold'>{project.name}</h2>
+    
+      <h1 style={{ textAlign: 'center', }} className='text-black kalam-bold'>{project.name}</h1>
+      <h3 style={{ textAlign: 'center', }} className='text-black kalam-light'>{project.description}</h3>
       <FilterNav onFilterChange={handleFilterChange} categories={project.categories} users={project.users} projects={project.id === "000" ? projects : []} />
       <section style={classes.board} className="kalam-bold my-4">
         {labels.map((channel, index) => (
-          <KanbanColumn key={channel} status={channel} tasks={start ? tasks : filteredTasks} updateTask={updateTask} PROJECT={project} isAdmin={isAdmin} colors={colors} index={index} />
+          <KanbanColumn key={channel} status={channel} tasks={start ? tasks : filteredTasks} updateTask={updateTask} PROJECT={project} isAdmin={isAdmin} colors={colors} index={index} setRefresh={setRefresh}/>
         ))}
       </section>
       {isAdmin &&
@@ -255,12 +267,13 @@ function Kanban() {
 
 }
 
-function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, index }) {
+function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, index,setRefresh }) {
   const [selectedid, setSelectedid] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenShowMore, setIsModalShowMore] = useState(null);
   const { deleteTaskById, editTask } = useContext(TaskContext);
   const { getProjectById } = useContext(ProjectContext);
+  const { findUserById,usersList,currentId} = useContext(UserContext);
 
   const openidSelectionModal = () => {
     setIsModalOpen(true);
@@ -271,15 +284,17 @@ function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, ind
   };
 
   const openidSelectionModalShowMore = (task) => {
-    console.log({ task });
+  
     setFormData(task)
     setIsModalShowMore(task);
   };
 
   const closeidSelectionModalShowMore = () => {
-    console.log(formData);
+    console.log({isAdmin,formData});
     if (isAdmin) {
-      editTask(formData)
+      editTask(formData);
+    
+      setRefresh(true);
 
     }
 
@@ -295,8 +310,9 @@ function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, ind
 
   const [formData, setFormData] = useState({});
   const updateFormData = (newFormData) => {
+    console.log({newFormData});
     setFormData(newFormData);
-
+setRefresh(true)
   };
   const [, drop] = useDrop({
     accept: "kanbanItem",
@@ -330,6 +346,11 @@ function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, ind
           borderColor: colors.darkGray,
           background: 'linear-gradient(5deg, rgba(0,0,0,1) 9%, rgba(209, 172, 176, 1) 70%, rgba(255,255,255,1) 100%)',
         };
+const fetchDynamicPic=(id)=>{
+  let res= findUserById(id);
+ console.log(res);
+  return res?.pic
+}
 
 
   return (
@@ -348,7 +369,7 @@ function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, ind
               {PROJECT.id === "000" && <b>{getNameProject(item.project).name}</b>}
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "auto" }}>
-                <Avatar src={item.user ? item.user.pic?item.user.pic: "https://joesch.moe/api/v1/random?key=" + item.user: "https://joesch.moe/api/v1/random?key=" + item.user} />
+              <Avatar src={item.user ? (item.user.pic ? fetchDynamicPic(item.user.pic) : "") : "https://joesch.moe/api/v1/random?key=" + "11"} />
 
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "auto" }}>
                   {PROJECT.id !== "000" && (<button style={classes.Icons}>
@@ -373,7 +394,8 @@ function KanbanColumn({ status, tasks, updateTask, PROJECT, isAdmin, colors, ind
         <>
           <TaskDetails task={isModalOpenShowMore} project={PROJECT} updateFormData={updateFormData} formData={formData} isAdmin={isAdmin} />
 
-          <button onClick={closeidSelectionModalShowMore}>סגור</button></>
+          <button onClick={closeidSelectionModalShowMore}>סגור</button>
+          </>
       </Modal>
 
 

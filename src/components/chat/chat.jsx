@@ -14,7 +14,7 @@ import {
 const Chat = ({ selectedUser , selectedProject, isOpen, handleClose}) => {//קבלת הפרוייקט הנוכחי והמשתמש איתו רוצים לפתוח צ'אט
 
 const { users, currentId,updateUserId } = useContext(UserContext);//קבלת משתמש נוכחי
- const currentUser=currentId?.id
+ const currentUser=localStorage.getItem("idUser")
  const receiver= selectedUser.id;
  const nameCurrenUser=currentId?.name;
  const nameReceiver= selectedUser.name;
@@ -32,8 +32,8 @@ const { users, currentId,updateUserId } = useContext(UserContext);//קבלת מ�
 
     useEffect(() => {
         setMessages([]);
-        console.log(currentId);
-        
+        console.log( localStorage.getItem('emailUser'));
+   
         const storedUserData = localStorage.getItem('token');
         if (storedUserData) {
 

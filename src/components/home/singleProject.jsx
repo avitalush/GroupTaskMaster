@@ -43,7 +43,7 @@ const handleEdit=()=>{
         </Card.Title>
         <Card.Text style={{ fontSize: '1.2em', marginBottom: '20px' }}>
           Participants: {participantsCount}
-          <p style={{ background:`${project.color}` }} className='kalam-bold'>color: ${project.color}</p>
+          <p style={{ background:`${project.color}` }} className='kalam-bold'>color: {project.color}</p>
         </Card.Text>
         <div
           style={{
